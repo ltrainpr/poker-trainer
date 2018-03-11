@@ -59,6 +59,37 @@ end
 # parser = ParseCards.new(ARGV)
 # p parser.parse
 
+class HighHand
+  attr_reader :cards
+  attr_accessor :my_current_hand
+
+  def initialize(cards)
+    @cards = cards
+    @my_current_hand = {}
+  end
+
+  def setFlush
+    if flush?
+      @my_current_hand[:hand] = 'flush'
+      @my_current_hand[:suit] = @suit
+      @my_current_hand[:value] = highestCardValue
+    end
+
+    @my_current_hand
+  end
+
+  def flush?
+    @suit = cards[0].fetch(:suit)
+    cards.all? do |card|
+      card.fetch(:suit) == @suit
+    end
+  end
+
+  def highestCardValue
+    @cards.max_by { |hashmap| hashmap.fetch(:value) }.fetch(:value)
+  end
+end
+
 
 =begin
 Combine sets, parse all cards into array of hashmap 2-14 value and suit.
