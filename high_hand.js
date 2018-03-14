@@ -1,36 +1,39 @@
 var _ = require('underscore');
 
-var CardParser = function (cards, _) {
-  const LOOKUP = { "J": 11, "Q": 12, "K":  13, "A": 14 }
-  var cards, myHand, communityCards, myHandCombined
+var HighHand = function (cards) {
+    var my_current_hand = {};
+    var suit;
 
-  function initialize() {
-    myHand = cards[0].split(" ") || [];
-    communityCards = cards[1].split(" ") || [];
-    return {
-      cards: cards,
-      myHand: myHand,
-      communityCards: communityCards,
-      myHandCombined: myHand.concat(communityCards)
+  function setFlush() {
+    if(isFlush()) {
+      my_current_hand.hand = 'flush';
+      my_current_hand.suit = suit;
+      my_current_hand.value = highestCardValue();
     }
+
+    return my_current_hand;
+   }
+
+  function highestCardValue() {
+    return _.max(cards, (hashmap) => { return hashmap.value; }).value;
   }
 
-  function parse() {
-    var str, suit;
-    var state = initialize();
-    return state.myHandCombined.map(function (card) {
-      [str, suit] = card.split("_")
-      var value = parseInt(str) > 0 ? parseInt(str) : LOOKUP[str]
-      return { value: value, suit: suit.toLowerCase() }
-    })
+  function isFlush() {
+    suit = cards[0].suit;
+    return _.all(cards, (card) => { return card.suit === suit; });
   }
 
   return {
-    parse: parse()
+    isFlush: isFlush(),
+    highestCardValue: highestCardValue(),
+    setFlush: setFlush()
   }
 }
 
-module.exports = CardParser;
+
+
+
+module.exports = HighHand;
 /*Combine sets, parse all cards into array of hashmap 2-14 value and suit.
 
 Is it a flush?
