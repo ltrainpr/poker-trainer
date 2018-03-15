@@ -2,22 +2,31 @@ var CardParser = require("../card_parser");
 var HighHand = require("../high_hand");
 
 describe("HighHand", () => {
-  beforeEach(() => {
-    parameters = ["Q_Heart J_Heart", "K_Heart 7_Heart 8_Heart"];
-    cards = CardParser(parameters).parse;
-    high_hand = HighHand(cards);
-  });
+  describe("Flop", () => {
+    it("flush", () => {
+      var parameters = ["Q_Heart J_Heart", "K_Heart 7_Heart 8_Heart"];
+      expect(highHand(parameters)).toEqual({ hand: 'flush', value: 13, suit: 'heart' });
+    });
 
-  it("#isFlush", () => {
-    expect(high_hand.isFlush).toEqual(true)
-  });
+    it("straight", () => {
+      var parameters = ["Q_Heart J_Club", "K_Heart 10_Spade 9_Diamond"];
+      console.log(highHand(parameters));
+      expect(highHand(parameters)).toEqual({ hand: 'straight', value: 13, suit: '' });
+    });
 
-  it("#highestCardValue", () => {
-    expect(high_hand.highestCardValue).toEqual(13)
-  });
+    xit("straight flush", () => {
+      var parameters = ["Q_Club J_Club", "K_Club 10_Club 9_Club"];
+      expect(highHand(parameters)).toEqual({ hand: 'straight flush', value: 13, suit: 'club' });
+    });
 
-  it("#setFlush", () => {
-    expect(high_hand.setFlush).toEqual({ hand: 'flush', value: 13, suit: 'heart' })
+    xit("four of a kind", () => {
+      var parameters = ["Q_Club Q_Spade", "Q_Heart Q_Diamond 9_Club"];
+      expect(highHand(parameters)).toEqual({ hand: 'four of a kind', value: 12, suit: '' });
+    });
   });
+});
 
-})
+function highHand (params) {
+  var parsedCards = CardParser(params).parse;
+  return HighHand(parsedCards).myCurrentHighHand;
+}
