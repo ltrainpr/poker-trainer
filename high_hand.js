@@ -1,17 +1,17 @@
 var _ = require('underscore');
 
 var HighHand = function (cards) {
-    var my_current_hand = {};
+    var myCurrentHand = {};
     var suit;
 
   function setFlush() {
     if(isFlush()) {
-      my_current_hand.hand = 'flush';
-      my_current_hand.suit = suit;
-      my_current_hand.value = highestCardValue();
+      myCurrentHand.hand = 'flush';
+      myCurrentHand.suit = suit;
+      myCurrentHand.value = highestCardValue();
     }
 
-    return my_current_hand;
+    return myCurrentHand;
    }
 
   function highestCardValue() {
@@ -24,13 +24,9 @@ var HighHand = function (cards) {
   }
 
   return {
-    isFlush: isFlush(),
-    highestCardValue: highestCardValue(),
-    setFlush: setFlush()
+    myCurrentHighHand: setFlush()
   }
 }
-
-
 
 
 module.exports = HighHand;
@@ -41,7 +37,7 @@ Is it a flush?
   - If yes, then are the values sequential (is it a straight, see below).
   - Set flush variable to true/false.
   - If flush: true:
-    - Set my_current_hand to hashmap to: hand: 'flush', value: <highest value>, suit: <suit>, suit: <suit>
+    - Set myCurrentHand to hashmap to: hand: 'flush', value: <highest value>, suit: <suit>, suit: <suit>
 Is it a straight?
   - Pluck all values.  Set card_values variable to plucked values and then sort.
   - Iterate over all values and check if they are sequential.
