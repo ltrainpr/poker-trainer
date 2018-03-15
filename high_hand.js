@@ -11,6 +11,12 @@ var HighHand = function (cards) {
       myCurrentHand.value = highestCardValue();
     }
 
+    if(isStraight()) {
+      myCurrentHand.hand = 'straight';
+      myCurrentHand.suit = '';
+      myCurrentHand.value = highestCardValue();
+    }
+
     return myCurrentHand;
    }
 
@@ -21,6 +27,22 @@ var HighHand = function (cards) {
   function isFlush() {
     suit = cards[0].suit;
     return _.all(cards, (card) => { return card.suit === suit; });
+  }
+
+  function isStraight() {
+    var sortedCards = _.pluck(cards, 'value').sort((a, b) => (a - b));
+    return isSequential(sortedCards)
+  }
+
+  function isSequential(sortedCards) {
+    var seq = true;
+    for (var i = sortedCards.length - 1; i > 0; i--) {
+      if(seq) {
+        seq = (sortedCards[i] - 1) === sortedCards[i - 1]
+      }
+    };
+
+    return seq;
   }
 
   return {

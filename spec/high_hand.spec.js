@@ -10,7 +10,6 @@ describe("HighHand", () => {
 
     it("straight", () => {
       var parameters = ["Q_Heart J_Club", "K_Heart 10_Spade 9_Diamond"];
-      console.log(highHand(parameters));
       expect(highHand(parameters)).toEqual({ hand: 'straight', value: 13, suit: '' });
     });
 
