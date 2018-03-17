@@ -3,7 +3,7 @@ var Flush = require('./flush');
 
 var HighHand = function (cards) {
     var myCurrentHand = {};
-    var suit;
+    var suit, fourValue;
 
   function evaluate() {
     var flush = Flush(cards);
@@ -15,10 +15,31 @@ var HighHand = function (cards) {
     if(isStraight()) {
       myCurrentHand.hand = 'straight';
       myCurrentHand.suit = '';
-      myCurrentHand.value = highestCardValue();
+    }
+
+    if(isStraight() && flush.isFlush) {
+      myCurrentHand.hand = 'straight flush';
+      myCurrentHand.suit = flush.suit;
+    }
+
+    myCurrentHand.value = highestCardValue();
+
+    if(isFourOfAKind()) {
+      myCurrentHand.hand = 'four of a kind';
+      myCurrentHand.suit = '';
+      myCurrentHand.value = parseInt(fourValue);
     }
 
     return myCurrentHand;
+   }
+
+   function isFourOfAKind() {
+    fourValue = _.chain(cards)
+    .groupBy((obj) => { return obj.value; })
+    .findKey((value, key) => { return value.length === 4; })
+    .value()
+
+     return fourValue ? true : false
    }
 
   function highestCardValue() {
