@@ -1,14 +1,15 @@
 var _ = require('underscore');
+var Flush = require('./flush');
 
 var HighHand = function (cards) {
     var myCurrentHand = {};
     var suit;
 
-  function setFlush() {
-    if(isFlush()) {
+  function evaluate() {
+    var flush = Flush(cards);
+    if(flush.isFlush) {
       myCurrentHand.hand = 'flush';
-      myCurrentHand.suit = suit;
-      myCurrentHand.value = highestCardValue();
+      myCurrentHand.suit = flush.suit;
     }
 
     if(isStraight()) {
@@ -22,11 +23,6 @@ var HighHand = function (cards) {
 
   function highestCardValue() {
     return _.max(cards, (hashmap) => { return hashmap.value; }).value;
-  }
-
-  function isFlush() {
-    suit = cards[0].suit;
-    return _.all(cards, (card) => { return card.suit === suit; });
   }
 
   function isStraight() {
