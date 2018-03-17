@@ -9,7 +9,7 @@ var Flush = function(cards) {
   }
 
   return {
-    isFlush: isFlush(),
+    isHand: isFlush(),
     suit: suit
   }
 }

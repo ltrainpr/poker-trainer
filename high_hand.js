@@ -1,69 +1,80 @@
 var _ = require('underscore');
 var Flush = require('./flush');
+var Straight = require('./straight');
+var FourOfAKind = require('./four_of_a_kind');
 
 var HighHand = function (cards) {
-    var myCurrentHand = {};
-    var suit, fourValue;
+  var myCurrentHand = {};
 
   function evaluate() {
-    var flush = Flush(cards);
-    if(flush.isFlush) {
-      myCurrentHand.hand = 'flush';
-      myCurrentHand.suit = flush.suit;
-    }
+    var fourOfAKind = FourOfAKind(cards);
+    var fullHouse = isFullHouse(cards);
 
-    if(isStraight()) {
-      myCurrentHand.hand = 'straight';
-      myCurrentHand.suit = '';
-    }
+    if(flushOrStraight()) { return myCurrentHand; };
 
-    if(isStraight() && flush.isFlush) {
-      myCurrentHand.hand = 'straight flush';
-      myCurrentHand.suit = flush.suit;
-    }
-
-    myCurrentHand.value = highestCardValue();
-
-    if(isFourOfAKind()) {
+    if(fourOfAKind.isHand) {
       myCurrentHand.hand = 'four of a kind';
       myCurrentHand.suit = '';
-      myCurrentHand.value = parseInt(fourValue);
+      myCurrentHand.value = parseInt(fourOfAKind.value);
+    }
+
+    if(fullHouse.isHand) {
+      myCurrentHand.hand = 'full house';
+      myCurrentHand.suit = '';
+      myCurrentHand.value = parseInt(fullHouse.value),
+      myCurrentHand.bottomPair = parseInt(fullHouse.bottomPair)
     }
 
     return myCurrentHand;
-   }
+  }
 
-   function isFourOfAKind() {
-    fourValue = _.chain(cards)
-    .groupBy((obj) => { return obj.value; })
-    .findKey((value, key) => { return value.length === 4; })
-    .value()
+  function isFullHouse(cards) {
+    var grouped = _.groupBy(cards, (obj) => { return obj.value; });
 
-     return fourValue ? true : false
-   }
+    var threeValue = _.findKey(grouped, (value, key) => { return value.length === 3; });
+
+    var twoValue = _.findKey(grouped, (value, key) => { return value.length === 2; });
+
+    return {
+      isHand: threeValue && twoValue,
+      value:  threeValue,
+      bottomPair: twoValue
+    }
+  }
+
+  function flushOrStraight() {
+    var flush = Flush(cards);
+    var straight = Straight(cards);
+
+    if(straight.isHand && flush.isHand) {
+      return myCurrentHand = {
+        hand: 'straight flush',
+        suit: flush.suit,
+        value: highestCardValue()
+      };
+    } else if(flush.isHand) {
+      return myCurrentHand = {
+        hand: 'flush',
+        suit: flush.suit,
+        value: highestCardValue()
+      };
+    } else if(straight.isHand) {
+      return myCurrentHand = {
+        hand: 'straight',
+        suit: '',
+        value: highestCardValue()
+      };
+    }
+
+    return false;
+  }
 
   function highestCardValue() {
     return _.max(cards, (hashmap) => { return hashmap.value; }).value;
   }
 
-  function isStraight() {
-    var sortedCards = _.pluck(cards, 'value').sort((a, b) => (a - b));
-    return isSequential(sortedCards)
-  }
-
-  function isSequential(sortedCards) {
-    var seq = true;
-    for (var i = sortedCards.length - 1; i > 0; i--) {
-      if(seq) {
-        seq = (sortedCards[i] - 1) === sortedCards[i - 1]
-      }
-    };
-
-    return seq;
-  }
-
   return {
-    myCurrentHighHand: setFlush()
+    myCurrentHighHand: evaluate()
   }
 }
 
