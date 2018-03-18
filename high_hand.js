@@ -7,59 +7,66 @@ var HighHand = function (cards) {
   var myCurrentHand = {};
 
   function evaluate() {
-    var fourOfAKind = FourOfAKind(cards);
-    var fullHouse = isFullHouse(cards);
+    var fourOrThreeOfAKindOrFullHouse;
+    var flushOrStraight = isFlushOrStraight();
 
-    if(flushOrStraight()) { return myCurrentHand; };
+    if(flushOrStraight) { return flushOrStraight; }
 
-    if(fourOfAKind.isHand) {
-      myCurrentHand.hand = 'four of a kind';
-      myCurrentHand.suit = '';
-      myCurrentHand.value = parseInt(fourOfAKind.value);
-    }
+    fourOrThreeOfAKindOrFullHouse = isFourOrThreeOfAKindOrFullHouse()
 
-    if(fullHouse.isHand) {
-      myCurrentHand.hand = 'full house';
-      myCurrentHand.suit = '';
-      myCurrentHand.value = parseInt(fullHouse.value),
-      myCurrentHand.bottomPair = parseInt(fullHouse.bottomPair)
-    }
+    if(fourOrThreeOfAKindOrFullHouse) { return fourOrThreeOfAKindOrFullHouse; }
 
     return myCurrentHand;
   }
 
-  function isFullHouse(cards) {
+  function isFourOrThreeOfAKindOrFullHouse() {
     var grouped = _.groupBy(cards, (obj) => { return obj.value; });
+    var four = _.findKey(grouped, (value, key) => { return value.length === 4; })
+    var three = _.findKey(grouped, (value, key) => { return value.length === 3; })
+    var two = _.findKey(grouped, (value, key) => { return value.length === 2; })
 
-    var threeValue = _.findKey(grouped, (value, key) => { return value.length === 3; });
-
-    var twoValue = _.findKey(grouped, (value, key) => { return value.length === 2; });
-
-    return {
-      isHand: threeValue && twoValue,
-      value:  threeValue,
-      bottomPair: twoValue
+    if(four) {
+      return {
+        hand: 'four of a kind',
+        suit: '',
+        value: parseInt(four, 10)
+      }
+    } else if(three && two) {
+      return {
+        hand: 'full house',
+        suit: '',
+        value: parseInt(three, 10),
+        bottomPair: parseInt(two, 10)
+      }
+    } else if(three) {
+      return {
+        hand: 'three of a kind',
+        suit: '',
+        value: parseInt(three, 10)
+      }
     }
+
+    return false;
   }
 
-  function flushOrStraight() {
+  function isFlushOrStraight() {
     var flush = Flush(cards);
     var straight = Straight(cards);
 
     if(straight.isHand && flush.isHand) {
-      return myCurrentHand = {
+      return {
         hand: 'straight flush',
         suit: flush.suit,
         value: highestCardValue()
       };
     } else if(flush.isHand) {
-      return myCurrentHand = {
+      return {
         hand: 'flush',
         suit: flush.suit,
         value: highestCardValue()
       };
     } else if(straight.isHand) {
-      return myCurrentHand = {
+      return {
         hand: 'straight',
         suit: '',
         value: highestCardValue()
@@ -75,8 +82,8 @@ var HighHand = function (cards) {
 
   return {
     myCurrentHighHand: evaluate()
-  }
-}
+  };
+};
 
 
 module.exports = HighHand;
