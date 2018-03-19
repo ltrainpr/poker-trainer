@@ -1,0 +1,56 @@
+How many outs on flop and turn?  What percentage of the time does card come in on turn or river?
+
+PSEUDO CODE:
+1. Arrays of 9 numbers, 4 face cards, 4 suits
+2. Shuffle
+3. Slice 2 random cards from shuffled array.
+4. Expose/Deal 3 flop cards
+5. Calculate number of outs.
+  - Did I hit anything?  Do I have a pair?
+  - How many outs do I have?
+    - Count full outs.
+      - What's my current hand? (meaning what's my highest hand)
+      - How many full outs to next highest hand?
+
+  - Estimate opponents hand range.
+    - Program randomly selects type of player depending on probability to encounter that player on limit holdem (tight_passive: 20%, loose_passive: 20%, tight_agressive: 50%, loose_aggressive: 10%)
+    - The earlier a player’s position in the betting order, the narrower the range of hands he is probably holding.
+
+  - Does my current hand beat my opponents range?
+  - Which hand beats that range?
+  - How many outs do I have to the hand that beats that range?
+
+  - Do I have an overpair?
+  - Is the board suited or sequential?
+    - Is this good or bad for my hand?  What calculation adjustments need to be made?
+  - How many outs do I have?
+    - Count partial outs.
+
+  - Is the board low and ragged?
+    - Is this good or bad for my hand?  What calculation adjustments need to be made?
+  - Do I have implied odds? (meaning outs to the nuts)
+  - Do I have reverse implied odds?
+
+  - Has the pot been raised? How many bets to me?
+    - Is this good or bad for my hand?  What calculation adjustments need to be made?
+  - What are the pot odds?
+  - How many people are in?
+    - Is this good or bad for my hand?  What calculation adjustments need to be made?
+
+  Given all this information do I raise, fold, or call?
+
+
+6. Deal next card.
+7. Calculate number of outs.
+  - Same steps as above.
+
+High Hand Order:
+1. A, K, Q, J, 10-2
+2. Pair same order
+3. Two pairs
+4. Three of a kind
+5. Straight
+6. Flush
+7. Full House
+8. Four of a kind
+9. Straight Flush
