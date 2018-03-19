@@ -3,6 +3,8 @@ var HighHand = require("../high_hand");
 
 describe("HighHand", () => {
   describe("Flop", () => {
+
+    // need to test for flush value being correct when there's a higher non flush card on the board.
     it("flush", () => {
       var parameters = ["Q_Heart J_Heart", "K_Heart 7_Heart 8_Heart"];
       expect(highHand(parameters)).toEqual({ hand: 'flush', value: 13, suit: 'heart' });
@@ -38,7 +40,7 @@ describe("HighHand", () => {
       expect(highHand(parameters)).toEqual({ hand: 'full house', value: 12, suit: '', bottomPair: 14 });
     });
 
-    xit("three of a kind", () => {
+    it("three of a kind", () => {
       var parameters = ["Q_Club Q_Spade", "Q_Heart 5_Diamond A_Club"];
       expect(highHand(parameters)).toEqual({ hand: 'three of a kind', value: 12, suit: '' });
     });
