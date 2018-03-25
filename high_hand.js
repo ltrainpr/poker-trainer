@@ -57,7 +57,7 @@ var HighHand = function (cards) {
       return {
         hand: 'straight flush',
         suit: flush.suit,
-        value: highestCardValue()
+        value: highestStraightCardValue(straight)
       };
     } else if(flush.isHand) {
       return {
@@ -69,7 +69,7 @@ var HighHand = function (cards) {
       return {
         hand: 'straight',
         suit: '',
-        value: highestCardValue()
+        value: highestStraightCardValue(straight)
       };
     }
 
@@ -78,6 +78,15 @@ var HighHand = function (cards) {
 
   function highestCardValue() {
     return _.max(cards, (hashmap) => { return hashmap.value; }).value;
+  }
+
+  function highestStraightCardValue(straight) {
+    if(straight.isWheel) {
+      var highestValueOfWheelStraight = 5;
+      return highestValueOfWheelStraight;
+    } else {
+      return highestCardValue();
+    }
   }
 
   return {

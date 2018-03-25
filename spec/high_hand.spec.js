@@ -20,7 +20,7 @@ describe("HighHand", () => {
       expect(highHand(parameters)).toEqual({ hand: 'straight', value: 10, suit: '' });
     });
 
-    xit("the wheel straight", () => {
+    it("the wheel straight", () => {
       var parameters = ["2_Heart 4_Club", "3_Heart A_Spade 5_Diamond"];
       expect(highHand(parameters)).toEqual({ hand: 'straight', value: 5, suit: '' });
     });
@@ -28,6 +28,11 @@ describe("HighHand", () => {
     it("straight flush", () => {
       var parameters = ["Q_Club J_Club", "K_Club 10_Club 9_Club"];
       expect(highHand(parameters)).toEqual({ hand: 'straight flush', value: 13, suit: 'club' });
+    });
+
+    it("the wheel straight flush", () => {
+      var parameters = ["2_Club 4_Club", "3_Club A_Club 5_Club"];
+      expect(highHand(parameters)).toEqual({ hand: 'straight flush', value: 5, suit: 'club' });
     });
 
     it("four of a kind", () => {
