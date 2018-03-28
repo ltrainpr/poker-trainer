@@ -5,48 +5,95 @@ var FourOfAKind = require('./four_of_a_kind');
 
 var HighHand = function (cards) {
   var myCurrentHand = {};
+  var grouped = _.groupBy(cards, (obj) => { return obj.value; });
 
   function evaluate() {
-    var fourOrThreeOfAKindOrFullHouse;
+    var fourOrThreeOfAKindOrFullHouse, twoPair;
     var flushOrStraight = isFlushOrStraight();
 
     if(flushOrStraight) { return flushOrStraight; }
 
-    fourOrThreeOfAKindOrFullHouse = isFourOrThreeOfAKindOrFullHouse()
+    fourOrThreeOfAKindOrFullHouse = isFourOrThreeOfAKindOrFullHouse();
 
     if(fourOrThreeOfAKindOrFullHouse) { return fourOrThreeOfAKindOrFullHouse; }
+
+    twoPair = oneOrTwoPair();
+
+    if(twoPair) { return twoPair; }
 
     return myCurrentHand;
   }
 
-  function isFourOrThreeOfAKindOrFullHouse() {
-    var grouped = _.groupBy(cards, (obj) => { return obj.value; });
-    var four = _.findKey(grouped, (value, key) => { return value.length === 4; })
-    var three = _.findKey(grouped, (value, key) => { return value.length === 3; })
-    var two = _.findKey(grouped, (value, key) => { return value.length === 2; })
+  function oneOrTwoPair() {
+    var pairs = _.pick(grouped, (value, key) => { return value.length === 2; })
 
-    if(four) {
+    if(pairs.length === 0) { return false; }
+
+    var higestValuePairs = _.chain(pairs)
+      .keys()
+      .map(function(num) { return parseInt(num, 10); })
+      .sort((a,b) => { return a - b; })
+      .value();
+
+    if(higestValuePairs.length === 3) { higestValuePairs.shift(); }
+
+    if(higestValuePairs.length === 2) {
       return {
-        hand: 'four of a kind',
+        hand: 'two pair',
+        value: higestValuePairs[1],
         suit: '',
-        value: parseInt(four, 10)
+        bottomPair:   higestValuePairs[0],
+        kicker:       0
       }
-    } else if(three && two) {
+    } else {
       return {
-        hand: 'full house',
-        suit: '',
-        value: parseInt(three, 10),
-        bottomPair: parseInt(two, 10)
+        hand:     'one pair',
+        value:    higestValuePairs[0],
+        suit:     '',
+        kicker:   0
       }
-    } else if(three) {
+    }
+  }
+
+  // function top
+
+  function isFourOrThreeOfAKindOrFullHouse() {
+    var hand = groupCards()
+
+    if(hand.fourOfAKind) {
       return {
-        hand: 'three of a kind',
-        suit: '',
-        value: parseInt(three, 10)
-      }
+        hand:   'four of a kind',
+        suit:   '',
+        value:  hand.fourOfAKind
+      };
+    } else if(hand.threeOfAKind && hand.twoOfAKind) {
+      return {
+        hand:         'full house',
+        suit:         '',
+        value:        hand.threeOfAKind,
+        bottomPair:   hand.twoOfAKind
+      };
+    } else if(hand.threeOfAKind) {
+      return {
+        hand:   'three of a kind',
+        suit:   '',
+        value:  hand.threeOfAKind
+      };
     }
 
     return false;
+  }
+
+  function groupCards() {
+    var four = _.findKey(grouped, (value, key) => { return value.length === 4; });
+    var three = _.findKey(grouped, (value, key) => { return value.length === 3; });
+    var two = _.findKey(grouped, (value, key) => { return value.length === 2; });
+
+    return {
+      fourOfAKind:   parseInt(four, 10)  || false,
+      threeOfAKind:  parseInt(three, 10) || false,
+      twoOfAKind:    parseInt(two, 10)   || false
+    }
   }
 
   function isFlushOrStraight() {

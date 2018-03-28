@@ -50,7 +50,7 @@ describe("HighHand", () => {
       expect(highHand(parameters)).toEqual({ hand: 'three of a kind', value: 12, suit: '' });
     });
 
-    xit("two pair", () => {
+    it("two pair", () => {
       var parameters = ["Q_Club Q_Spade", "5_Heart 5_Diamond A_Club"];
       expect(highHand(parameters)).toEqual({ hand: 'two pair', value: 12, suit: '', bottomPair: 5, kicker: 14 });
     });
