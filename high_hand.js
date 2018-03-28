@@ -29,13 +29,7 @@ var HighHand = function (cards) {
 
     if(pairs.length === 0) { return false; }
 
-    var higestValuePairs = _.chain(pairs)
-      .keys()
-      .map(function(num) { return parseInt(num, 10); })
-      .sort((a,b) => { return a - b; })
-      .value();
-
-    if(higestValuePairs.length === 3) { higestValuePairs.shift(); }
+    var higestValuePairs = topPairs(pairs)
 
     if(higestValuePairs.length === 2) {
       return {
@@ -43,19 +37,42 @@ var HighHand = function (cards) {
         value: higestValuePairs[1],
         suit: '',
         bottomPair:   higestValuePairs[0],
-        kicker:       0
+        kicker:       kicker()
       }
     } else {
       return {
         hand:     'one pair',
         value:    higestValuePairs[0],
         suit:     '',
-        kicker:   0
+        kicker:   kicker()
       }
     }
   }
 
-  // function top
+  function kicker() {
+    var singles = _.omit(grouped, (value, key) => { return value.length === 2; })
+    var sortedValues = sortKeys(singles);
+
+    return sortedValues[sortedValues.length - 1];
+  }
+
+  function topPairs(pairs) {
+    var highestValuePairs = sortKeys(pairs);
+
+    if(highestValuePairs.length === 3) { highestValuePairs.shift(); }
+
+    return highestValuePairs;
+  }
+
+  function sortKeys(filteredCards) {
+    return (
+      _.chain(filteredCards)
+      .keys()
+      .map(function(num) { return parseInt(num, 10); })
+      .sort((a,b) => { return a - b; })
+      .value()
+    )
+  }
 
   function isFourOrThreeOfAKindOrFullHouse() {
     var hand = groupCards()
