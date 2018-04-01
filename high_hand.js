@@ -77,11 +77,11 @@ var HighHand = function (cards) {
   function isFourOrThreeOfAKindOrFullHouse() {
     var hand = groupCards()
 
-    if(hand.fourOfAKind) {
+    if(hand.fourOfAKind.isHand) {
       return {
         hand:   'four of a kind',
         suit:   '',
-        value:  hand.fourOfAKind
+        value:  hand.fourOfAKind.value
       };
     } else if(hand.threeOfAKind && hand.twoOfAKind) {
       return {
@@ -102,13 +102,12 @@ var HighHand = function (cards) {
   }
 
   function groupCards() {
-    var four = _.findKey(grouped, (value, key) => { return value.length === 4; });
     var three = _.findKey(grouped, (value, key) => { return value.length === 3; });
     var two = _.findKey(grouped, (value, key) => { return value.length === 2; });
 
     return {
-      fourOfAKind:   parseInt(four, 10)  || false,
-      threeOfAKind:  parseInt(three, 10) || false,
+      fourOfAKind:   FourOfAKind(grouped),
+      threeOfAKind:  ThreeOfAKind(grouped),
       twoOfAKind:    parseInt(two, 10)   || false
     }
   }
@@ -121,36 +120,23 @@ var HighHand = function (cards) {
       return {
         hand: 'straight flush',
         suit: flush.suit,
-        value: highestStraightCardValue(straight)
+        value: straight.value
       };
     } else if(flush.isHand) {
       return {
         hand: 'flush',
         suit: flush.suit,
-        value: highestCardValue()
+        value: flush.value
       };
     } else if(straight.isHand) {
       return {
         hand: 'straight',
         suit: '',
-        value: highestStraightCardValue(straight)
+        value: straight.value
       };
     }
 
     return false;
-  }
-
-  function highestCardValue() {
-    return _.max(cards, (hashmap) => { return hashmap.value; }).value;
-  }
-
-  function highestStraightCardValue(straight) {
-    if(straight.isWheel) {
-      var highestValueOfWheelStraight = 5;
-      return highestValueOfWheelStraight;
-    } else {
-      return highestCardValue();
-    }
   }
 
   return {

@@ -1,16 +1,28 @@
 var _ = require('underscore');
 
 var Flush = function(cards) {
-  var suit;
+  var suit, flush;
+  var grouped = _.groupBy(cards, (card) => { return card.suit; });
 
   function isFlush() {
-    suit = cards[0].suit;
-    return _.all(cards, (card) => { return card.suit === suit; });
+    suit = _.findKey(grouped, (value, key, obj) => {
+      return value.length > 4
+    })
+
+    return suit;
   }
 
+  function flushValue() {
+    if(suit) {
+      return _.max(grouped[suit], (group) => { return group.value; }).value
+    }
+  }
+
+
   return {
-    isHand: isFlush(),
-    suit: suit
+    isHand: isFlush() ? true : false,
+    suit: suit,
+    value: flushValue()
   }
 }
 

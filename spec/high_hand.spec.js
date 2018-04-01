@@ -9,7 +9,7 @@ describe("HighHand", () => {
       expect(highHand(parameters)).toEqual({ hand: 'flush', value: 13, suit: 'heart' });
     });
 
-    it("K high straight", () => {
+    it("King high straight", () => {
       parameters = ["Q_Heart J_Club", "K_Heart 10_Spade 9_Diamond"];
       expect(highHand(parameters)).toEqual({ hand: 'straight', value: 13, suit: '' });
     });
@@ -66,32 +66,32 @@ describe("HighHand", () => {
       expect(highHand(parameters)).toEqual({ hand: 'flush', value: 13, suit: 'heart' });
     });
 
-    xit("K high straight", () => {
+    it("King high straight", () => {
       parameters = ["Q_Heart J_Club", "K_Heart 10_Spade 9_Diamond 3_Club"];
       expect(highHand(parameters)).toEqual({ hand: 'straight', value: 13, suit: '' });
     });
 
-    xit("10 high straight", () => {
+    it("10 high straight", () => {
       parameters = ["6_Heart 7_Club", "8_Heart 10_Spade 9_Diamond K_Heart"];
       expect(highHand(parameters)).toEqual({ hand: 'straight', value: 10, suit: '' });
     });
 
-    xit("the wheel straight", () => {
+    it("the wheel straight", () => {
       parameters = ["2_Heart 4_Club", "3_Heart A_Spade 5_Diamond J_Spade"];
       expect(highHand(parameters)).toEqual({ hand: 'straight', value: 5, suit: '' });
     });
 
-    xit("royal flush", () => {
+    it("royal flush", () => {
       parameters = ["Q_Club J_Club", "K_Club 10_Club 9_Club A_Club"];
       expect(highHand(parameters)).toEqual({ hand: 'straight flush', value: 14, suit: 'club' });
     });
 
-    xit("the wheel straight flush", () => {
+    it("the wheel straight flush", () => {
       parameters = ["2_Club 4_Club", "3_Club A_Club 5_Club A_Heart"];
       expect(highHand(parameters)).toEqual({ hand: 'straight flush', value: 5, suit: 'club' });
     });
 
-    xit("four of a kind", () => {
+    it("four of a kind", () => {
       parameters = ["Q_Club Q_Spade", "Q_Heart Q_Diamond A_Club 2_Diamond"];
       expect(highHand(parameters)).toEqual({ hand: 'four of a kind', value: 12, suit: '' });
     });
