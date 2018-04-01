@@ -96,22 +96,22 @@ describe("HighHand", () => {
       expect(highHand(parameters)).toEqual({ hand: 'four of a kind', value: 12, suit: '' });
     });
 
-    xit("full house", () => {
+    it("full house", () => {
       parameters = ["Q_Club Q_Spade", "Q_Heart A_Diamond A_Club A_Spade"];
       expect(highHand(parameters)).toEqual({ hand: 'full house', value: 14, suit: '', bottomPair: 12 });
     });
 
-    xit("three of a kind", () => {
+    it("three of a kind", () => {
       parameters = ["Q_Club Q_Spade", "Q_Heart 5_Diamond A_Club 9_Diamond"];
       expect(highHand(parameters)).toEqual({ hand: 'three of a kind', value: 12, suit: '' });
     });
 
-    xit("two pair", () => {
+    it("two pair", () => {
       parameters = ["Q_Club Q_Spade", "5_Heart 5_Diamond A_Club 2_Club"];
       expect(highHand(parameters)).toEqual({ hand: 'two pair', value: 12, suit: '', bottomPair: 5, kicker: 14 });
     });
 
-    xit("one pair", () => {
+    it("one pair", () => {
       parameters = ["Q_Club J_Spade", "5_Heart 5_Diamond A_Club 8_Heart"];
       expect(highHand(parameters)).toEqual({ hand: 'one pair', value: 5, suit: '', kicker: 14 });
     });

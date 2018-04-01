@@ -2,6 +2,7 @@ var _ = require('underscore');
 var Flush = require('./flush');
 var Straight = require('./straight');
 var FourOfAKind = require('./four_of_a_kind');
+var ThreeOfAKind = require('./three_of_a_kind');
 
 var HighHand = function (cards) {
   var myCurrentHand = {};
@@ -83,18 +84,18 @@ var HighHand = function (cards) {
         suit:   '',
         value:  hand.fourOfAKind.value
       };
-    } else if(hand.threeOfAKind && hand.twoOfAKind) {
+    } else if(hand.threeOfAKind.isHand && (hand.threeOfAKind.bottomPair || hand.twoOfAKind)) {
       return {
         hand:         'full house',
         suit:         '',
-        value:        hand.threeOfAKind,
-        bottomPair:   hand.twoOfAKind
+        value:        hand.threeOfAKind.value,
+        bottomPair:   hand.threeOfAKind.bottomPair || hand.twoOfAKind
       };
-    } else if(hand.threeOfAKind) {
+    } else if(hand.threeOfAKind.isHand) {
       return {
         hand:   'three of a kind',
         suit:   '',
-        value:  hand.threeOfAKind
+        value:  hand.threeOfAKind.value
       };
     }
 
@@ -102,7 +103,6 @@ var HighHand = function (cards) {
   }
 
   function groupCards() {
-    var three = _.findKey(grouped, (value, key) => { return value.length === 3; });
     var two = _.findKey(grouped, (value, key) => { return value.length === 2; });
 
     return {
