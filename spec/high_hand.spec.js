@@ -116,6 +116,62 @@ describe("HighHand", () => {
       expect(highHand(parameters)).toEqual({ hand: 'one pair', value: 5, suit: '', kicker: 14 });
     });
   });
+  describe("River", () => {
+    it("flush", () => {
+      parameters = ["Q_Heart J_Heart", "K_Heart 7_Heart 8_Heart A_Spade 2_Club"];
+      expect(highHand(parameters)).toEqual({ hand: 'flush', value: 13, suit: 'heart' });
+    });
+
+    it("King high straight", () => {
+      parameters = ["Q_Heart J_Club", "K_Heart 10_Spade 9_Diamond 3_Club J_Spade"];
+      expect(highHand(parameters)).toEqual({ hand: 'straight', value: 13, suit: '' });
+    });
+
+    xit("Jack high straight", () => {
+      parameters = ["6_Heart 7_Club", "8_Heart 10_Spade 9_Diamond K_Heart J_Spade"];
+      expect(highHand(parameters)).toEqual({ hand: 'straight', value: 11, suit: '' });
+    });
+
+    xit("the wheel straight", () => {
+      parameters = ["2_Heart 4_Club", "3_Heart A_Spade 5_Diamond J_Spade 6_Heart"];
+      expect(highHand(parameters)).toEqual({ hand: 'straight', value: 5, suit: '' });
+    });
+
+    xit("royal flush", () => {
+      parameters = ["Q_Club J_Club", "K_Club 10_Club 9_Club A_Club 2_Diamond"];
+      expect(highHand(parameters)).toEqual({ hand: 'straight flush', value: 14, suit: 'club' });
+    });
+
+    xit("the wheel straight flush", () => {
+      parameters = ["2_Club 4_Club", "3_Club A_Club 5_Club A_Heart 7_Heart"];
+      expect(highHand(parameters)).toEqual({ hand: 'straight flush', value: 5, suit: 'club' });
+    });
+
+    xit("four of a kind", () => {
+      parameters = ["Q_Club Q_Spade", "Q_Heart Q_Diamond A_Club 2_Diamond 6_Spade"];
+      expect(highHand(parameters)).toEqual({ hand: 'four of a kind', value: 12, suit: '' });
+    });
+
+    xit("full house", () => {
+      parameters = ["Q_Club Q_Spade", "Q_Heart A_Diamond A_Club A_Spade 10_Spade"];
+      expect(highHand(parameters)).toEqual({ hand: 'full house', value: 14, suit: '', bottomPair: 12 });
+    });
+
+    xit("three of a kind", () => {
+      parameters = ["Q_Club Q_Spade", "Q_Heart 5_Diamond A_Club 9_Diamond 4_Diamond"];
+      expect(highHand(parameters)).toEqual({ hand: 'three of a kind', value: 12, suit: '' });
+    });
+
+    xit("two pair", () => {
+      parameters = ["Q_Club Q_Spade", "5_Heart 5_Diamond A_Club 2_Club A_Heart"];
+      expect(highHand(parameters)).toEqual({ hand: 'two pair', value: 14, suit: '', bottomPair: 12, kicker: 5 });
+    });
+
+    xit("one pair", () => {
+      parameters = ["Q_Club J_Spade", "5_Heart 5_Diamond A_Club 8_Heart 2_Club"];
+      expect(highHand(parameters)).toEqual({ hand: 'one pair', value: 5, suit: '', kicker: 14 });
+    });
+  });
 });
 
 function highHand (params) {
