@@ -3,7 +3,7 @@ var _ = require('underscore');
 var Straight = function(cards) {
   var highValue;
   var wheel = false;
-  var sortedCards = _.pluck(cards, 'value').sort((a, b) => (a - b));
+  var sortedCards = _.uniq(_.pluck(cards, 'value')).sort((a, b) => (a - b));
 
   function isStraight() {
     if(hasAce()) {
@@ -60,7 +60,7 @@ var Straight = function(cards) {
         dataSets.push(copy.slice(2, 7))
         break;
       default:
-        console.log("Straight#checkSequences: " + sortedCards.length);
+        return;
     }
 
     return dataSets;

@@ -3,7 +3,7 @@ var HighHand = require("../high_hand");
 
 describe("HighHand", () => {
   var parameters;
-  describe("Flop", () => {
+  xdescribe("Flop", () => {
     it("flush", () => {
       parameters = ["Q_Heart J_Heart", "K_Heart 7_Heart 8_Heart"];
       expect(highHand(parameters)).toEqual({ hand: 'flush', value: 13, suit: 'heart' });
@@ -60,7 +60,7 @@ describe("HighHand", () => {
     });
   });
 
-  describe("Turn", () => {
+  xdescribe("Turn", () => {
     it("flush", () => {
       parameters = ["Q_Heart J_Heart", "K_Heart 7_Heart 8_Heart A_Spade"];
       expect(highHand(parameters)).toEqual({ hand: 'flush', value: 13, suit: 'heart' });
@@ -117,12 +117,12 @@ describe("HighHand", () => {
     });
   });
   describe("River", () => {
-    it("flush", () => {
+    xit("flush", () => {
       parameters = ["Q_Heart J_Heart", "K_Heart 7_Heart 8_Heart A_Spade 2_Club"];
       expect(highHand(parameters)).toEqual({ hand: 'flush', value: 13, suit: 'heart' });
     });
 
-    it("King high straight", () => {
+    xit("King high straight", () => {
       parameters = ["Q_Heart J_Club", "K_Heart 10_Spade 9_Diamond 3_Club J_Spade"];
       expect(highHand(parameters)).toEqual({ hand: 'straight', value: 13, suit: '' });
     });
@@ -134,7 +134,7 @@ describe("HighHand", () => {
 
     xit("the wheel straight", () => {
       parameters = ["2_Heart 4_Club", "3_Heart A_Spade 5_Diamond J_Spade 6_Heart"];
-      expect(highHand(parameters)).toEqual({ hand: 'straight', value: 5, suit: '' });
+      expect(highHand(parameters)).toEqual({ hand: 'straight', value: 6, suit: '' });
     });
 
     xit("royal flush", () => {
@@ -162,7 +162,7 @@ describe("HighHand", () => {
       expect(highHand(parameters)).toEqual({ hand: 'three of a kind', value: 12, suit: '' });
     });
 
-    xit("two pair", () => {
+    it("two pair", () => {
       parameters = ["Q_Club Q_Spade", "5_Heart 5_Diamond A_Club 2_Club A_Heart"];
       expect(highHand(parameters)).toEqual({ hand: 'two pair', value: 14, suit: '', bottomPair: 12, kicker: 5 });
     });

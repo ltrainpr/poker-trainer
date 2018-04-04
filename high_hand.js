@@ -3,6 +3,7 @@ var Flush = require('./flush');
 var Straight = require('./straight');
 var FourOfAKind = require('./four_of_a_kind');
 var ThreeOfAKind = require('./three_of_a_kind');
+var Pairs = require('./pairs');
 
 var HighHand = function (cards) {
   var myCurrentHand = {};
@@ -26,13 +27,9 @@ var HighHand = function (cards) {
   }
 
   function oneOrTwoPair() {
-    var pairs = _.pick(grouped, (value, key) => { return value.length === 2; })
+    var hand = Pairs(grouped);
 
-    if(pairs.length === 0) { return false; }
-
-    var higestValuePairs = topPairs(pairs)
-
-    if(higestValuePairs.length === 2) {
+    if(hand.twoPair) {
       return {
         hand: 'two pair',
         value: higestValuePairs[1],
@@ -57,14 +54,6 @@ var HighHand = function (cards) {
     return sortedValues[sortedValues.length - 1];
   }
 
-  function topPairs(pairs) {
-    var highestValuePairs = sortKeys(pairs);
-
-    if(highestValuePairs.length === 3) { highestValuePairs.shift(); }
-
-    return highestValuePairs;
-  }
-
   function sortKeys(filteredCards) {
     return (
       _.chain(filteredCards)
@@ -76,7 +65,10 @@ var HighHand = function (cards) {
   }
 
   function isFourOrThreeOfAKindOrFullHouse() {
-    var hand = groupCards()
+    var hand = {
+      fourOfAKind:   FourOfAKind(grouped),
+      threeOfAKind:  ThreeOfAKind(grouped)
+    }
 
     if(hand.fourOfAKind.isHand) {
       return {
@@ -100,16 +92,6 @@ var HighHand = function (cards) {
     }
 
     return false;
-  }
-
-  function groupCards() {
-    var two = _.findKey(grouped, (value, key) => { return value.length === 2; });
-
-    return {
-      fourOfAKind:   FourOfAKind(grouped),
-      threeOfAKind:  ThreeOfAKind(grouped),
-      twoOfAKind:    parseInt(two, 10)   || false
-    }
   }
 
   function isFlushOrStraight() {
