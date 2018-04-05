@@ -30,18 +30,12 @@ var HighHand = function (cards) {
     var hand = Pairs(grouped);
 
     if(hand.twoPair) {
-      return {
-        hand: 'two pair',
-        value: higestValuePairs[1],
-        suit: '',
-        bottomPair:   higestValuePairs[0],
-        kicker:       kicker()
-      }
+      return _.omit(hand, 'twoPair');
     } else {
       return {
         hand:     'one pair',
-        value:    higestValuePairs[0],
-        suit:     '',
+        value:    hand.value,
+        suit:     hand.suit,
         kicker:   kicker()
       }
     }

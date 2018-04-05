@@ -1,22 +1,14 @@
 var _ = require('underscore');
 
 var Pairs = function(cards) {
-  var pairs = _.pick(cards, (value, key) => { return value.length === 2; })
+  var sortedPairs;
 
-    if(pairs.length === 0) { return false; }
+  function twoPair() {
+    var pairs = _.pick(cards, (value, key) => { return value.length === 2; })
+    if(_.size(pairs) === 0) { return false; }
 
-    var higestValuePairs = topPairs(pairs)
-
-    var two = _.findKey(grouped, (value, key) => { return value.length === 2; });
-
-    parseInt(two, 10)   || false
-
-  function topPairs(pairs) {
-    var highestValuePairs = sortKeys(pairs);
-
-    if(highestValuePairs.length === 3) { highestValuePairs.shift(); }
-
-    return highestValuePairs;
+    sortedPairs = sortKeys(pairs);
+    return _.size(pairs) > 1 ? true : false;
   }
 
   function sortKeys(filteredCards) {
@@ -25,17 +17,40 @@ var Pairs = function(cards) {
       .keys()
       .map(function(num) { return parseInt(num, 10); })
       .sort((a,b) => { return a - b; })
+      .reverse()
       .value()
     )
   }
 
-  return {
-    twoPair: twoPair(),
-    value: highestValuePair,
-    suit: '',
-    bottomPair: secondHighestValuePair,
-    kicker: kicker()
+  function values() {
+    var result = {};
+
+    if(sortedPairs.length === 3) {
+      result = {
+        hand: 'two pair',
+        value: parseInt(sortedPairs[0], 10),
+        bottomPair: parseInt(sortedPairs[1], 10),
+        kicker: parseInt(sortedPairs[2], 10)
+      };
+    } else if(sortedPairs.length === 2) {
+      result = {
+        hand: 'two pair',
+        value: parseInt(sortedPairs[0], 10),
+        bottomPair: parseInt(sortedPairs[1], 10)
+      };
+    } else {
+      result = {
+        value: parseInt(sortedPairs[0], 10)
+      };
+    }
+
+    return result;
   }
+
+  return _.extendOwn({
+    twoPair: twoPair(),
+    suit: ''
+  }, values())
 }
 
 module.exports = Pairs;
