@@ -37,12 +37,12 @@ var HighHand = function (cards) {
         value:    hand.value,
         suit:     hand.suit,
         kicker:   kicker()
-      }
+      };
     }
   }
 
   function kicker() {
-    var singles = _.omit(grouped, (value, key) => { return value.length === 2; })
+    var singles = _.omit(grouped, (value, key) => { return value.length === 2; });
     var sortedValues = sortKeys(singles);
 
     return sortedValues[sortedValues.length - 1];

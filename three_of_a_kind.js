@@ -5,7 +5,7 @@ var ThreeOfAKind = function(groupedCards) {
   var lowValue = null;
 
   function isThreeOfAKind() {
-    threeValues = _.pick(groupedCards, (value, key) => { return value.length === 3; })
+    threeValues = _.pick(groupedCards, (value, key) => { return value.length === 3; });
 
     if(_.size(threeValues)) { setHighLowValues(threeValues); }
 
@@ -13,11 +13,11 @@ var ThreeOfAKind = function(groupedCards) {
   }
 
   function setHighLowValues(values) {
-    var val = _.keys(values)
+    var val = _.keys(values);
 
     switch(val.length) {
       case 2:
-        val.sort((a,b) => { return a - b; })
+        val.sort((a,b) => { return a - b; });
         highValue = parseInt(val[1], 10);
         lowValue = parseInt(val[0], 10);
         break;
@@ -33,7 +33,7 @@ var ThreeOfAKind = function(groupedCards) {
     isHand: isThreeOfAKind(),
     value:  highValue || false,
     bottomPair: lowValue
-  }
-}
+  };
+};
 
 module.exports = ThreeOfAKind;

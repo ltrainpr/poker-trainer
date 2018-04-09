@@ -4,7 +4,7 @@ var Pairs = function(cards) {
   var sortedPairs;
 
   function twoPair() {
-    var pairs = _.pick(cards, (value, key) => { return value.length === 2; })
+    var pairs = _.pick(cards, (value, key) => { return value.length === 2; });
     if(_.size(pairs) === 0) { return false; }
 
     sortedPairs = sortKeys(pairs);
@@ -50,7 +50,7 @@ var Pairs = function(cards) {
   return _.extendOwn({
     twoPair: twoPair(),
     suit: ''
-  }, values())
-}
+  }, values());
+};
 
 module.exports = Pairs;
