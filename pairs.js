@@ -19,18 +19,19 @@ var Pairs = function(cards) {
       .sort((a,b) => { return a - b; })
       .reverse()
       .value()
-    )
+    );
   }
 
   function values() {
     var result = {};
+    if(_.isUndefined(sortedPairs)) { return result; }
 
     if(sortedPairs.length === 3) {
       result = {
         hand: 'two pair',
-        value: parseInt(sortedPairs[0], 10),
-        bottomPair: parseInt(sortedPairs[1], 10),
-        kicker: parseInt(sortedPairs[2], 10)
+        value: sortedPairs[0],
+        bottomPair: sortedPairs[1],
+        kicker: sortedPairs[2]
       };
     } else if(sortedPairs.length === 2) {
       result = {
@@ -38,8 +39,9 @@ var Pairs = function(cards) {
         value: parseInt(sortedPairs[0], 10),
         bottomPair: parseInt(sortedPairs[1], 10)
       };
-    } else {
+    } else if(sortedPairs.length === 1) {
       result = {
+        hand: 'one pair',
         value: parseInt(sortedPairs[0], 10)
       };
     }

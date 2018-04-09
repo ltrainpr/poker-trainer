@@ -30,7 +30,9 @@ var HighHand = function (cards) {
     var hand = Pairs(grouped);
 
     if(hand.twoPair) {
-      return _.omit(hand, 'twoPair');
+      var obj = _.omit(hand, 'twoPair');
+      obj.kicker = hand.kicker || kicker();
+      return obj;
     } else {
       return {
         hand:     'one pair',
@@ -55,14 +57,15 @@ var HighHand = function (cards) {
       .map(function(num) { return parseInt(num, 10); })
       .sort((a,b) => { return a - b; })
       .value()
-    )
+    );
   }
 
   function isFourOrThreeOfAKindOrFullHouse() {
     var hand = {
-      fourOfAKind:   FourOfAKind(grouped),
-      threeOfAKind:  ThreeOfAKind(grouped)
-    }
+      fourOfAKind:    FourOfAKind(grouped),
+      threeOfAKind:   ThreeOfAKind(grouped),
+      twoOfAKind:     Pairs(grouped)
+    };
 
     if(hand.fourOfAKind.isHand) {
       return {
@@ -70,12 +73,12 @@ var HighHand = function (cards) {
         suit:   '',
         value:  hand.fourOfAKind.value
       };
-    } else if(hand.threeOfAKind.isHand && (hand.threeOfAKind.bottomPair || hand.twoOfAKind)) {
+    } else if(hand.threeOfAKind.isHand && (hand.threeOfAKind.bottomPair || hand.twoOfAKind.value)) {
       return {
         hand:         'full house',
         suit:         '',
         value:        hand.threeOfAKind.value,
-        bottomPair:   hand.threeOfAKind.bottomPair || hand.twoOfAKind
+        bottomPair:   hand.threeOfAKind.bottomPair || hand.twoOfAKind.value
       };
     } else if(hand.threeOfAKind.isHand) {
       return {
