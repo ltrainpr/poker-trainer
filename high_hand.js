@@ -3,10 +3,11 @@ var Flush = require('./flush');
 var Straight = require('./straight');
 var FourOfAKind = require('./four_of_a_kind');
 var ThreeOfAKind = require('./three_of_a_kind');
-var Pairs = require('./pairs');
+var twoPair = require('./two_pair');
+var onePair = require('./one_pair');
 
 var HighHand = function (cards) {
-  var pairs;
+  var pair;
   var myCurrentHand = {};
   var grouped = _.groupBy(cards, (obj) => { return obj.value; });
 
@@ -26,8 +27,14 @@ var HighHand = function (cards) {
   }
 
   function oneOrTwoPair() {
-    pairs = pairs || Pairs(grouped);
-    return _.omit(pairs, 'twoPair');
+    var twoOrMorePairs = twoPair(grouped);
+    if(twoOrMorePairs.isHand){
+      return _.omit(twoOrMorePairs, 'isHand');
+    }
+
+    if(pair.isHand) {
+      return _.omit(pair, 'isHand');
+    }
   }
 
   function isFourOrThreeOfAKindOrFullHouse() {
@@ -41,14 +48,14 @@ var HighHand = function (cards) {
     }
 
     var threeOfAKind = ThreeOfAKind(grouped);
-    pairs = Pairs(grouped);
+    pair = onePair(grouped);
 
-    if(threeOfAKind.isHand && (threeOfAKind.bottomPair || pairs.value)) {
+    if(threeOfAKind.isHand && (threeOfAKind.bottomPair || pair.value)) {
       return {
         hand:         'full house',
         suit:         '',
         value:        threeOfAKind.value,
-        bottomPair:   threeOfAKind.bottomPair || pairs.value
+        bottomPair:   threeOfAKind.bottomPair || pair.value
       };
     }
 
