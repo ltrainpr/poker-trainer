@@ -15,7 +15,7 @@ var Pairs = function(cards) {
     return (
       _.chain(filteredCards)
       .keys()
-      .map(function(num) { return parseInt(num, 10); })
+      .map(function(num) { return typeof num === "string" ? parseInt(num, 10) : num; })
       .sort((a,b) => { return a - b; })
       .reverse()
       .value()
@@ -49,9 +49,17 @@ var Pairs = function(cards) {
     return result;
   }
 
+  function kicker() {
+    var singles = _.pick(cards, (value, key) => { return value.length === 1; });
+    var sortedValues = sortKeys(singles);
+
+    return sortedValues[0];
+  }
+
   return _.extendOwn({
     twoPair: twoPair(),
-    suit: ''
+    suit: '',
+    kicker: kicker()
   }, values());
 };
 
