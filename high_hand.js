@@ -6,6 +6,7 @@ var ThreeOfAKind = require('./three_of_a_kind');
 var Pairs = require('./pairs');
 
 var HighHand = function (cards) {
+  var pairs;
   var myCurrentHand = {};
   var grouped = _.groupBy(cards, (obj) => { return obj.value; });
 
@@ -16,45 +17,46 @@ var HighHand = function (cards) {
     if(flushOrStraight) { return flushOrStraight; }
 
     fourOrThreeOfAKindOrFullHouse = isFourOrThreeOfAKindOrFullHouse();
-
     if(fourOrThreeOfAKindOrFullHouse) { return fourOrThreeOfAKindOrFullHouse; }
 
     twoPair = oneOrTwoPair();
-
     if(twoPair) { return twoPair; }
 
     return myCurrentHand;
   }
 
   function oneOrTwoPair() {
-    return _.omit(Pairs(grouped), 'twoPair');
+    pairs = pairs || Pairs(grouped);
+    return _.omit(pairs, 'twoPair');
   }
 
   function isFourOrThreeOfAKindOrFullHouse() {
-    var hand = {
-      fourOfAKind:    FourOfAKind(grouped),
-      threeOfAKind:   ThreeOfAKind(grouped),
-      twoOfAKind:     Pairs(grouped)
-    };
-
-    if(hand.fourOfAKind.isHand) {
+    var fourOfAKind = FourOfAKind(grouped);
+    if(fourOfAKind.isHand) {
       return {
         hand:   'four of a kind',
         suit:   '',
-        value:  hand.fourOfAKind.value
+        value:  fourOfAKind.value
       };
-    } else if(hand.threeOfAKind.isHand && (hand.threeOfAKind.bottomPair || hand.twoOfAKind.value)) {
+    }
+
+    var threeOfAKind = ThreeOfAKind(grouped);
+    pairs = Pairs(grouped);
+
+    if(threeOfAKind.isHand && (threeOfAKind.bottomPair || pairs.value)) {
       return {
         hand:         'full house',
         suit:         '',
-        value:        hand.threeOfAKind.value,
-        bottomPair:   hand.threeOfAKind.bottomPair || hand.twoOfAKind.value
+        value:        threeOfAKind.value,
+        bottomPair:   threeOfAKind.bottomPair || pairs.value
       };
-    } else if(hand.threeOfAKind.isHand) {
+    }
+
+    if(threeOfAKind.isHand) {
       return {
         hand:   'three of a kind',
         suit:   '',
-        value:  hand.threeOfAKind.value
+        value:  threeOfAKind.value
       };
     }
 
