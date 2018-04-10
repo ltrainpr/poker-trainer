@@ -58,6 +58,11 @@ describe("HighHand", () => {
       parameters = ["Q_Club J_Spade", "5_Heart 5_Diamond A_Club"];
       expect(highHand(parameters)).toEqual({ hand: 'one pair', value: 5, suit: '', kicker: 14 });
     });
+
+    xit("no pairs high card", () => {
+      parameters = ["2_Club 10_Spade", "J_Heart 5_Diamond 6_Club"];
+      expect(highHand(parameters)).toEqual({ hand: 'high card', value: 10, suit: '', kicker: 2 });
+    });
   });
 
   describe("Turn", () => {
@@ -115,7 +120,13 @@ describe("HighHand", () => {
       parameters = ["Q_Club J_Spade", "5_Heart 5_Diamond A_Club 8_Heart"];
       expect(highHand(parameters)).toEqual({ hand: 'one pair', value: 5, suit: '', kicker: 14 });
     });
+
+    xit("no pairs high card", () => {
+      parameters = ["2_Club 10_Spade", "J_Heart 5_Diamond 6_Club K_Heart"];
+      expect(highHand(parameters)).toEqual({ hand: 'high card', value: 10, suit: '', kicker: 2 });
+    });
   });
+
   describe("River", () => {
     it("flush", () => {
       parameters = ["Q_Heart J_Heart", "K_Heart 7_Heart 8_Heart A_Spade 2_Club"];
@@ -170,6 +181,11 @@ describe("HighHand", () => {
     it("one pair", () => {
       parameters = ["Q_Club J_Spade", "5_Heart 5_Diamond A_Club 8_Heart 2_Club"];
       expect(highHand(parameters)).toEqual({ hand: 'one pair', value: 5, suit: '', kicker: 14 });
+    });
+
+    xit("no pairs high card", () => {
+      parameters = ["2_Club 10_Spade", "J_Heart 5_Diamond 6_Club K_Heart 8_Heart"];
+      expect(highHand(parameters)).toEqual({ hand: 'high card', value: 10, suit: '', kicker: 2 });
     });
   });
 });
