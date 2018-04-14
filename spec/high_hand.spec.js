@@ -59,7 +59,7 @@ describe("HighHand", () => {
       expect(highHand(parameters)).toEqual({ hand: 'one pair', value: 5, suit: '', kicker: 14 });
     });
 
-    xit("no pairs high card", () => {
+    it("no pairs high card", () => {
       parameters = ["2_Club 10_Spade", "J_Heart 5_Diamond 6_Club"];
       expect(highHand(parameters)).toEqual({ hand: 'high card', value: 10, suit: '', kicker: 2 });
     });
@@ -121,7 +121,7 @@ describe("HighHand", () => {
       expect(highHand(parameters)).toEqual({ hand: 'one pair', value: 5, suit: '', kicker: 14 });
     });
 
-    xit("no pairs high card", () => {
+    it("no pairs high card", () => {
       parameters = ["2_Club 10_Spade", "J_Heart 5_Diamond 6_Club K_Heart"];
       expect(highHand(parameters)).toEqual({ hand: 'high card', value: 10, suit: '', kicker: 2 });
     });
@@ -183,7 +183,7 @@ describe("HighHand", () => {
       expect(highHand(parameters)).toEqual({ hand: 'one pair', value: 5, suit: '', kicker: 14 });
     });
 
-    xit("no pairs high card", () => {
+    it("no pairs high card", () => {
       parameters = ["2_Club 10_Spade", "J_Heart 5_Diamond 6_Club K_Heart 8_Heart"];
       expect(highHand(parameters)).toEqual({ hand: 'high card', value: 10, suit: '', kicker: 2 });
     });
