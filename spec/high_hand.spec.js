@@ -192,5 +192,5 @@ describe("HighHand", () => {
 
 function highHand (params) {
   var parsedCards = CardParser(params).parse;
-  return HighHand(parsedCards).myCurrentHighHand;
+  return HighHand(parsedCards);
 }
