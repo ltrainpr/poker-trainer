@@ -26,37 +26,20 @@ var HighHand = function (cards) {
     if(straight.isHand && flush.isHand) {
       return {
         hand: 'straight flush',
-        suit: flush.suit,
-        value: straight.value
+        suit: flush.hand.suit,
+        value: straight.hand.value
       };
     }
 
-    if(flush.isHand) {
-      return {
-        hand: 'flush',
-        suit: flush.suit,
-        value: flush.value
-      };
-    }
-
-    if(straight.isHand) {
-      return {
-        hand: 'straight',
-        value: straight.value
-      };
-    }
+    if(flush.isHand) { return flush.hand; }
+    if(straight.isHand) { return straight.hand; }
 
     return false;
   }
 
   function isFourOrThreeOfAKindOrFullHouse() {
     var fourOfAKind = FourOfAKind(grouped);
-    if(fourOfAKind.isHand) {
-      return {
-        hand:   'four of a kind',
-        value:  fourOfAKind.value
-      };
-    }
+    if(fourOfAKind.isHand) { return fourOfAKind.hand; }
 
     var threeOfAKind = ThreeOfAKind(grouped);
     singlePair = onePair(grouped);
@@ -64,17 +47,12 @@ var HighHand = function (cards) {
     if(fullHouse(threeOfAKind, singlePair)) {
       return {
         hand:         'full house',
-        value:        threeOfAKind.value,
-        bottomPair:   threeOfAKind.bottomPair || singlePair.value
+        value:        threeOfAKind.hand.value,
+        bottomPair:   threeOfAKind.bottomPair || singlePair.hand.value
       };
     }
 
-    if(threeOfAKind.isHand) {
-      return {
-        hand:   'three of a kind',
-        value:  threeOfAKind.value
-      };
-    }
+    if(threeOfAKind.isHand) { return threeOfAKind.hand; }
 
     return false;
   }
@@ -82,19 +60,14 @@ var HighHand = function (cards) {
   function fullHouse(threeOfAKind, singlePair) {
     return (
       threeOfAKind.isHand &&
-      (threeOfAKind.bottomPair || singlePair.value)
+      (threeOfAKind.bottomPair || singlePair.hand.value)
     )
   }
 
   function oneOrTwoPair() {
     var twoOrMorePairs = twoPair(grouped);
-    if(twoOrMorePairs.isHand){
-      return _.omit(twoOrMorePairs, 'isHand');
-    }
-
-    if(singlePair.isHand) {
-      return _.omit(singlePair, 'isHand');
-    }
+    if(twoOrMorePairs.isHand){ return twoOrMorePairs.hand; }
+    if(singlePair.isHand) { return singlePair.hand; }
   }
 
   function highCard() {

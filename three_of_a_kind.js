@@ -31,7 +31,10 @@ var ThreeOfAKind = function(groupedCards) {
 
   return {
     isHand: isThreeOfAKind(),
-    value:  highValue || false,
+    hand: {
+      hand:   'three of a kind',
+      value:  highValue || false,
+    },
     bottomPair: lowValue
   };
 };

@@ -1,7 +1,7 @@
 var _ = require('underscore');
 
 var Flush = function(cards) {
-  var suit, flush;
+  var suit;
   var grouped = _.groupBy(cards, (card) => { return card.suit; });
 
   function isFlush() {
@@ -18,11 +18,13 @@ var Flush = function(cards) {
     }
   }
 
-
   return {
     isHand: isFlush() ? true : false,
-    suit: suit,
-    value: flushValue()
+    hand:   {
+      hand: 'flush',
+      suit: suit,
+      value: flushValue()
+    },
   }
 }
 

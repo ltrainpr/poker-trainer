@@ -90,7 +90,10 @@ var Straight = function(cards) {
   return {
     isHand: isStraight(),
     isWheel: wheel,
-    value: highValue
+    hand: {
+      hand: 'straight',
+      value: highValue
+    }
   }
 }
 

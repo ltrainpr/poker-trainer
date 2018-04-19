@@ -25,11 +25,13 @@ var onePair = function(cards) {
     return result;
   }
 
-  return _.extendOwn({
+  return {
     isHand: pair(),
-    suit: '',
-    kicker: PairHelper.kicker(cards)
-  }, values());
+    hand:   _.extendOwn({
+              suit: '',
+              kicker: PairHelper.kicker(cards)
+            }, values())
+  }
 };
 
 module.exports = onePair;

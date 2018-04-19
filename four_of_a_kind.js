@@ -11,7 +11,10 @@ var FourOfAKind = function(groupedCards) {
 
   return {
     isHand: isFourOfAKind(),
-    value:  parseInt(fourValue, 10) || false
+    hand:   {
+      hand:   'four of a kind',
+      value:  parseInt(fourValue, 10) || false
+    }
   };
 };
 
