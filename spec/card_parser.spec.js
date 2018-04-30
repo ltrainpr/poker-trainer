@@ -1,4 +1,4 @@
-var CardParser = require("../card_parser");
+var CardParser = require("../high_hand/card_parser");
 var _ = require('underscore');
 
 describe("CardParser", () => {
