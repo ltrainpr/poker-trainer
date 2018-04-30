@@ -1,5 +1,5 @@
-var CardParser = require("../card_parser");
-var HighHand = require("../high_hand");
+var CardParser = require("../high_hand/card_parser");
+var HighHand = require("../high_hand/high_hand");
 
 describe("HighHand", () => {
   var parameters;
