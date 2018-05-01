@@ -6,7 +6,6 @@ Texas Holdem Game:
 
 - Betting: Money tracking, distribution, and accounting.
   - Initial/required bets.  The blinds 1/2 or 2/4.
-  - Scorer keeps track of players money.
   - Pot keeps track of money in the hand.
 
 - Type of opponent (How the person plays)
