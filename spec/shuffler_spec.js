@@ -1,7 +1,7 @@
-var Shuffler = require("../shuffler");
+var ShuffledDeck = require("../shuffler");
 
-describe("Shuffler", () => {
+describe("ShuffledDeck", () => {
   it("has 52 cards", () => {
-    expect(Shuffler.shuffle.count).toBe(52);
+    expect(ShuffledDeck().length).toBe(52);
   });
 });
