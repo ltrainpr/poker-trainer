@@ -1,6 +1,6 @@
 var Player = require("./player");
 
-var Game = function() {
+var Game = Game || (function(Player) {
   var names =
   [
     "Amy",
@@ -30,6 +30,6 @@ var Game = function() {
     players:  players,
     button:   4
   }
-}
+})(Player);
 
 module.exports = Game
