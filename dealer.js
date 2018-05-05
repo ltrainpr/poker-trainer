@@ -8,7 +8,7 @@ var Dealer = function() {
   var communityCards = [];
 
   function playerToAct() {
-    var sum = button +3;
+    var sum = button + 3;
 
     switch (sum) {
       case 10:
@@ -21,6 +21,25 @@ var Dealer = function() {
         return sum;
     }
   }
+
+  function handIsOver() {
+    resetPlayerHands();
+    resetCommunityCards();
+    resetDeck();
+    moveButton();
+  }
+
+  function resetPlayerHands() {
+    players.forEach((player) => { player.hand.length = 0; })
+  }
+  function resetCommunityCards() { communityCards.length = 0; }
+  function resetDeck() { deck = Shuffler(); }
+  function moveButton() { button = button > 9 ? 0 : button + 1; }
+
+  function currentDeck() { return deck; }
+  function getCommunityCards() { return communityCards; }
+  function getButton() { return button; }
+
 
   return {
     deal:     function() {
@@ -40,9 +59,11 @@ var Dealer = function() {
         communityCards.push(deck.pop());
       }
     },
-    currentDeck: deck,
+    currentDeck: currentDeck,
+    button: getButton,
     action: players[playerToAct()],
-    communityCards: communityCards
+    communityCards: getCommunityCards,
+    nextHand:   handIsOver
   }
 }
 

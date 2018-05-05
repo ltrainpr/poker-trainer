@@ -10,9 +10,9 @@ describe("Dealer", () => {
 
   it("Every card dealt gets popped off the array", () => {
     var dealer = Dealer();
-    expect(dealer.currentDeck.length).toBe(52);
+    expect(dealer.currentDeck().length).toBe(52);
     dealer.deal();
-    expect(dealer.currentDeck.length).toBe(32);
+    expect(dealer.currentDeck().length).toBe(32);
   });
 
   it("Starting action should be on 3rd player after button", () => {
@@ -25,8 +25,8 @@ describe("Dealer", () => {
     var dealer = Dealer();
     dealer.deal();
     dealer.dealFlop();
-    expect(dealer.currentDeck.length).toBe(29);
-    expect(dealer.communityCards.length).toBe(3);
+    expect(dealer.currentDeck().length).toBe(29);
+    expect(dealer.communityCards().length).toBe(3);
   });
 
   it("deal the turn", () => {
@@ -34,8 +34,8 @@ describe("Dealer", () => {
     dealer.deal();
     dealer.dealFlop();
     dealer.dealNext();
-    expect(dealer.currentDeck.length).toBe(28);
-    expect(dealer.communityCards.length).toBe(4);
+    expect(dealer.currentDeck().length).toBe(28);
+    expect(dealer.communityCards().length).toBe(4);
   });
 
   it("deal the river", () => {
@@ -44,7 +44,19 @@ describe("Dealer", () => {
     dealer.dealFlop();
     dealer.dealNext();
     dealer.dealNext();
-    expect(dealer.currentDeck.length).toBe(27);
-    expect(dealer.communityCards.length).toBe(5);
+    expect(dealer.currentDeck().length).toBe(27);
+    expect(dealer.communityCards().length).toBe(5);
+  });
+
+  it("#nextHand", () => {
+    var dealer = Dealer();
+    dealer.deal();
+    dealer.dealFlop();
+    dealer.dealNext();
+    dealer.dealNext();
+    dealer.nextHand();
+    expect(dealer.currentDeck().length).toBe(52);
+    expect(dealer.communityCards().length).toBe(0);
+    expect(dealer.button()).toBe(5);
   });
 });
