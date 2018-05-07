@@ -34,7 +34,7 @@ var Dealer = function() {
   }
   function resetCommunityCards() { communityCards.length = 0; }
   function resetDeck() { deck = Shuffler(); }
-  function moveButton() { button = button > 9 ? 0 : button + 1; }
+  function moveButton() { button = button === 9 ? 0 : button + 1; }
 
   function currentDeck() { return deck; }
   function getCommunityCards() { return communityCards; }

@@ -1,3 +1,4 @@
+var _ = require('underscore');
 var Player = require("./player");
 
 var Game = Game || (function(Player) {
@@ -28,7 +29,7 @@ var Game = Game || (function(Player) {
 
   return {
     players:  players,
-    button:   4
+    button:   _.random(9)
   }
 })(Player);
 

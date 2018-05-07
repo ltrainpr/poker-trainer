@@ -15,10 +15,11 @@ describe("Dealer", () => {
     expect(dealer.currentDeck().length).toBe(32);
   });
 
-  it("Starting action should be on 3rd player after button", () => {
-    var blind = Game.button;
+  it("Action should be on 3rd player after button", () => {
     var dealer = Dealer();
-    expect(dealer.action).toEqual(Game.players[7]);
+    var underTheGun = dealer.button() + 3
+    if(underTheGun > 9) { underTheGun = underTheGun.toString(10).split("")[1]}
+    expect(dealer.action).toEqual(Game.players[underTheGun]);
   });
 
   it("#dealFlop", () => {
@@ -50,13 +51,17 @@ describe("Dealer", () => {
 
   it("#nextHand", () => {
     var dealer = Dealer();
+    var button = dealer.button();
     dealer.deal();
     dealer.dealFlop();
     dealer.dealNext();
     dealer.dealNext();
     dealer.nextHand();
+
     expect(dealer.currentDeck().length).toBe(52);
     expect(dealer.communityCards().length).toBe(0);
-    expect(dealer.button()).toBe(5);
+
+    var nextButton = button === 9 ? 0 : button + 1;
+    expect(dealer.button()).toBe(nextButton);
   });
 });
