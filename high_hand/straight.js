@@ -31,7 +31,7 @@ var Straight = function(cards) {
 
         seq = nextSequentialValue === nextNumber;
       }
-    };
+    }
 
     return seq;
   }
@@ -57,7 +57,7 @@ var Straight = function(cards) {
       case 7:
         dataSets.push(copy.slice(0, 5));
         dataSets.push(copy.slice(1, 6));
-        dataSets.push(copy.slice(2, 7))
+        dataSets.push(copy.slice(2, 7));
         break;
       default:
         return;
@@ -70,12 +70,12 @@ var Straight = function(cards) {
     var sequential;
     var results = [];
     results = _.map(dataSets, (dataSet) => {
-      sequential = isSequential(dataSet)
-      if(sequential) { highValue = dataSet[dataSet.length - 1]}
+      sequential = isSequential(dataSet);
+      if(sequential) { highValue = dataSet[dataSet.length - 1]; }
       return sequential;
-    })
+    });
 
-    return _.contains(results, true)
+    return _.contains(results, true);
   }
 
   function isWheel() {
@@ -94,7 +94,7 @@ var Straight = function(cards) {
       hand: 'straight',
       value: highValue
     }
-  }
-}
+  };
+};
 
 module.exports = Straight;

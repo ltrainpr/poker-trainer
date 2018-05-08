@@ -30,7 +30,7 @@ var Dealer = function() {
   }
 
   function resetPlayerHands() {
-    players.forEach((player) => { player.hand.length = 0; })
+    players.forEach((player) => { player.hand.length = 0; });
   }
   function resetCommunityCards() { communityCards.length = 0; }
   function resetDeck() { deck = Shuffler(); }
@@ -51,7 +51,7 @@ var Dealer = function() {
       if(communityCards.length === 0) {
         for (var i = 3; i > 0; i--) {
           communityCards.push(deck.pop());
-        };
+        }
       }
     },
     dealNext: function() {
@@ -64,7 +64,7 @@ var Dealer = function() {
     action: players[playerToAct()],
     communityCards: getCommunityCards,
     nextHand:   handIsOver
-  }
-}
+  };
+};
 
-module.exports = Dealer
+module.exports = Dealer;

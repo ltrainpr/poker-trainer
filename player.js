@@ -15,6 +15,6 @@ var Player = function(name) {
     type: playingStyles[_.random(3)],
     money: 200
   };
-}
+};
 
-module.exports = Player
+module.exports = Player;

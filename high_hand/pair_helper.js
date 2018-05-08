@@ -19,7 +19,7 @@ var PairHelper = (function() {
         .value()
       );
     }
-  }
+  };
 })();
 
 module.exports = PairHelper;

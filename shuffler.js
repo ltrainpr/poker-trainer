@@ -1,7 +1,7 @@
 var _ = require('underscore');
 
 var ShuffledDeck = function() {
-  var unDealtDeck = unDealtDeck || newDeck()
+  var unDealtDeck = unDealtDeck || newDeck();
 
   function newDeck() {
     var result = [];
@@ -11,7 +11,7 @@ var ShuffledDeck = function() {
         result.push({
           value: value,
           suit: suit
-        })
+        });
       }
     });
 
@@ -26,4 +26,4 @@ var ShuffledDeck = function() {
 };
 
 
-module.exports = ShuffledDeck
+module.exports = ShuffledDeck;

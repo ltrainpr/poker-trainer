@@ -41,7 +41,7 @@ var twoPair = function(cards) {
               suit: '',
               kicker: PairHelper.kicker(cards)
             }, values())
-  }
+  };
 };
 
 module.exports = twoPair;

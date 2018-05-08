@@ -6,15 +6,15 @@ var Flush = function(cards) {
 
   function isFlush() {
     suit = _.findKey(grouped, (value, key, obj) => {
-      return value.length > 4
-    })
+      return value.length > 4;
+    });
 
     return suit;
   }
 
   function flushValue() {
     if(suit) {
-      return _.max(grouped[suit], (group) => { return group.value; }).value
+      return _.max(grouped[suit], (group) => { return group.value; }).value;
     }
   }
 
@@ -25,7 +25,7 @@ var Flush = function(cards) {
       suit: suit,
       value: flushValue()
     },
-  }
-}
+  };
+};
 
 module.exports = Flush;

@@ -31,7 +31,7 @@ var onePair = function(cards) {
               suit: '',
               kicker: PairHelper.kicker(cards)
             }, values())
-  }
+  };
 };
 
 module.exports = onePair;

@@ -21,8 +21,8 @@ var Game = Game || (function(Player) {
   function createPlayers() {
     var playersArray = [];
     for (var i = 9; i >= 0; i--) {
-      playersArray.push(Player(names[i]))
-    };
+      playersArray.push(Player(names[i]));
+    }
 
     return playersArray;
   }
@@ -30,7 +30,7 @@ var Game = Game || (function(Player) {
   return {
     players:  players,
     button:   _.random(9)
-  }
+  };
 })(Player);
 
-module.exports = Game
+module.exports = Game;

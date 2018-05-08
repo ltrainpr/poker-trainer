@@ -17,8 +17,8 @@ describe("Dealer", () => {
 
   it("Action should be on 3rd player after button", () => {
     var dealer = Dealer();
-    var underTheGun = dealer.button() + 3
-    if(underTheGun > 9) { underTheGun = underTheGun.toString(10).split("")[1]}
+    var underTheGun = dealer.button() + 3;
+    if(underTheGun > 9) { underTheGun = underTheGun.toString(10).split("")[1]; }
     expect(dealer.action).toEqual(Game.players[underTheGun]);
   });
 
