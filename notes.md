@@ -2,11 +2,13 @@ Texas Holdem Game:
 - 10 different 2 card hands and community cards.
   - Shuffler shuffles hands.
   - Dealer distributes hands.
-  - Game keeps track of community cards and players hands.
+  - Game keeps track of community cards hands.
+  - Player keeps track of players hands.
 
 - Betting: Money tracking, distribution, and accounting.
   - Initial/required bets.  The blinds 1/2 or 2/4.
   - Pot keeps track of money in the hand.
+  - Betting actions (check, bet, call, raise) affect Player state.
 
 - Type of opponent (How the person plays)
   - Does he play a lot of hands or only a few?
