@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var Player = require("./player");
 
-var Game = Game || (function(Player) {
+var Game = function() {
   var names =
   [
     "Amy",
@@ -31,6 +31,6 @@ var Game = Game || (function(Player) {
     players:  players,
     button:   _.random(9)
   };
-})(Player);
+};
 
 module.exports = Game;

@@ -2,8 +2,9 @@ var Game = require("./game");
 var Shuffler = require("./shuffler");
 
 var Dealer = function() {
-  var players = Game.players;
-  var button = button || Game.button;
+  var game = game || Game();
+  var players = game.players;
+  var button = button || game.button;
   var deck = deck || Shuffler();
   var communityCards = [];
 
@@ -38,7 +39,7 @@ var Dealer = function() {
 
   function currentDeck() { return deck; }
   function getCommunityCards() { return communityCards; }
-  function getButton() { return button; }
+  function getButtonPosition() { return button; }
 
 
   return {
@@ -60,10 +61,11 @@ var Dealer = function() {
       }
     },
     currentDeck: currentDeck,
-    button: getButton,
+    getButtonPosition: getButtonPosition,
     action: players[playerToAct()],
     communityCards: getCommunityCards,
-    nextHand:   handIsOver
+    nextHand:   handIsOver,
+    players: players
   };
 };
 

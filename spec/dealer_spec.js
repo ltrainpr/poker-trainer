@@ -4,8 +4,9 @@ var _ = require('underscore');
 
 describe("Dealer", () => {
   it("Deals two cards to every player", () => {
-    Dealer().deal();
-    expect(Game.players[_.random(9)].hand.length).toBe(2);
+    var dealer = Dealer();
+    dealer.deal();
+    expect(dealer.players[_.random(9)].hand.length).toBe(2);
   });
 
   it("Every card dealt gets popped off the array", () => {
@@ -17,9 +18,9 @@ describe("Dealer", () => {
 
   it("Action should be on 3rd player after button", () => {
     var dealer = Dealer();
-    var underTheGun = dealer.button() + 3;
+    var underTheGun = dealer.getButtonPosition() + 3;
     if(underTheGun > 9) { underTheGun = underTheGun.toString(10).split("")[1]; }
-    expect(dealer.action).toEqual(Game.players[underTheGun]);
+    expect(dealer.action).toEqual(dealer.players[underTheGun]);
   });
 
   it("#dealFlop", () => {
@@ -51,7 +52,7 @@ describe("Dealer", () => {
 
   it("#nextHand", () => {
     var dealer = Dealer();
-    var button = dealer.button();
+    var button = dealer.getButtonPosition();
     dealer.deal();
     dealer.dealFlop();
     dealer.dealNext();
@@ -62,6 +63,6 @@ describe("Dealer", () => {
     expect(dealer.communityCards().length).toBe(0);
 
     var nextButton = button === 9 ? 0 : button + 1;
-    expect(dealer.button()).toBe(nextButton);
+    expect(dealer.getButtonPosition()).toBe(nextButton);
   });
 });
