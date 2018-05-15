@@ -1,41 +1,57 @@
-var Dealer = require("./dealer");
-
 var Betting = function() {
   const smallBlind = 1;
   const bigBlind = 2;
-  var dealer = dealer || Dealer();
-  var players = dealer.players;
-  var pot = 0;
+  var actionIndex;
 
-  function blinds() {
-    var button = dealer.getButtonPosition();
-    var small = button + 1 === 10 ? 0 : button;
-    var big = bigBlindIndex(button);
+  function playerToAct(players, underTheGun){
+    return players[getPlayerToActIndex(underTheGun)]
+  }
 
-    players[small].money = players[small].money - smallBlind;
-    players[big].money = players[big].money - bigBlind;
+  function getPlayerToActIndex(underTheGun) {
+    actionIndex = actionIndex || underTheGun;
 
-    return [players[small], players[big]];
+    switch (actionIndex) {
+      case 10:
+        actionIndex = 0;
+      case 11:
+        actionIndex = 1;
+      case 12:
+        actionIndex = 2;
+      default:
+        actionIndex = actionIndex;
+    }
+
+    return actionIndex
+  }
+
+  function blinds(players, button) {
+    var small = button + 1 === 10 ? players[0] : players[button];
+    var big = players[bigBlindIndex(button)];
+
+    small.money = small.money - smallBlind;
+    big.money = big.money - bigBlind;
+
+    return [small, big];
   }
 
   function bigBlindIndex(button) {
-    var sum = button + 2;
+    var playerIndex = button + 2;
 
-    switch (sum) {
+    switch (playerIndex) {
       case 10:
         return 0;
       case 11:
         return 1;
       default:
-        return sum;
+        return playerIndex;
     }
   }
 
-  function playerBets(bet) {
-    var player = dealer.action;
+  function playerBets(player, bet) {
     if(player.money > bet) {
       player.money = player.money - bet;
       pot = pot + bet;
+      actionIndex += 1;
     } else {
       console.log("Betting#playerBets: Player is attempting to bet more than he has available.");
     }
@@ -43,10 +59,9 @@ var Betting = function() {
     return player;
   }
 
-  return {
-    blinds: blinds,
-    playerBets: playerBets
-  }
+  function playerFolds(player) { player.hand.length = 0; }
+
+  return { playerToAct, blinds, playerBets, playerFolds };
 };
 
 module.exports = Betting;
