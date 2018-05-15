@@ -1,49 +1,28 @@
-var Game = require("./game");
 var Shuffler = require("./shuffler");
 
-var Dealer = function() {
-  var game = game || Game();
-  var players = game.players;
-  var button = button || game.button;
+var Dealer = function(players) {
   var deck = deck || Shuffler();
   var communityCards = [];
-
-  function playerToAct() {
-    var sum = button + 3;
-
-    switch (sum) {
-      case 10:
-        return 0;
-      case 11:
-        return 1;
-      case 12:
-        return 2;
-      default:
-        return sum;
-    }
-  }
 
   function handIsOver() {
     resetPlayerHands();
     resetCommunityCards();
     resetDeck();
-    moveButton();
   }
 
   function resetPlayerHands() {
     players.forEach((player) => { player.hand.length = 0; });
   }
+
   function resetCommunityCards() { communityCards.length = 0; }
   function resetDeck() { deck = Shuffler(); }
-  function moveButton() { button = button === 9 ? 0 : button + 1; }
 
   function currentDeck() { return deck; }
   function getCommunityCards() { return communityCards; }
-  function getButtonPosition() { return button; }
 
 
   return {
-    deal:     function() {
+    deal:     function(players) {
       players.forEach((player) => {
         player.hand = [deck.pop(), deck.pop()];
       });
@@ -61,11 +40,8 @@ var Dealer = function() {
       }
     },
     currentDeck: currentDeck,
-    getButtonPosition: getButtonPosition,
-    action: players[playerToAct()],
     communityCards: getCommunityCards,
-    nextHand:   handIsOver,
-    players: players
+    nextHand:   handIsOver
   };
 };
 
