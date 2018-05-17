@@ -59,7 +59,10 @@ var Betting = function() {
     return player;
   }
 
-  function playerFolds(player) { player.hand.length = 0; }
+  function playerFolds(player) {
+    player.hand.length = 0;
+    actionIndex += 1;
+  }
 
   return { playerToAct, blinds, playerBets, playerFolds };
 };
