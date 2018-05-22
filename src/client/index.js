@@ -1,10 +1,54 @@
 import React from 'react';
 import { render } from 'react-dom';
-import App from './components/App.jsx';
-
+import ActionButton from './components/Poker.jsx';
 import styles from './scss/application.scss';
 
+var Game = require("./game/game");
+var game = game || Game();
+
+function startGame() {
+  var players = game.players;
+  var button = game.button;
+  var dealer = game.dealer;
+  var betting = game.betting;
+  var smallBlind, bigBlind;
+  var startingButton = button.generateButtonIndex();
+
+
+  [smallBlind, bigBlind] = betting.blinds(players, startingButton);
+  dealer.deal(players);
+
+  var action = game.betting.playerToAct(players, game.button.underTheGunIndex(startingButton));
+
+  // action stops here until player looks at cards;
+  console.log("action stops here until player looks at cards");
+  console.log(action.hand);
+
+  // Setup event handlers for betting or folding;
+
+
+}
+
+function Action() {
+  var hand = startGame();
+
+  return (
+    <div>
+      <div>
+        <ShowHand hand="#{hand}" />
+      </div>
+      <div>
+        <ActionButton action="Call" />
+        <ActionButton action="Bet" />
+        <ActionButton action="Raise" />
+        <ActionButton action="Fold" />
+      </div>
+    </div>
+  );
+}
+
+
 render(
-  <App />,
+  <Action />,
   document.getElementById('root')
 );

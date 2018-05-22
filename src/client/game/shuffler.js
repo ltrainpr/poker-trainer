@@ -7,7 +7,7 @@ var ShuffledDeck = function() {
     var result = [];
     var suits = ['hearts', 'clubs', 'spades', 'diamonds'];
     suits.forEach((suit) => {
-      for(value = 2; value < 15; value++) {
+      for(var value = 2; value < 15; value++) {
         result.push({
           value: value,
           suit: suit
