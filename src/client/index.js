@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
-import ActionButton from './components/Poker.jsx';
+import ActionButton from './components/ActionButton.jsx';
+import ShowHand from './components/ShowHand.jsx';
 import styles from './scss/application.scss';
 
 var Game = require("./game/game");
@@ -25,7 +26,7 @@ function startGame() {
   console.log(action.hand);
 
   // Setup event handlers for betting or folding;
-
+  return action.hand
 
 }
 
@@ -35,7 +36,8 @@ function Action() {
   return (
     <div>
       <div>
-        <ShowHand hand="#{hand}" />
+        <ShowHand value={hand[0].value} suit={hand[0].suit} />
+        <ShowHand value={hand[1].value} suit={hand[1].suit} />
       </div>
       <div>
         <ActionButton action="Call" />

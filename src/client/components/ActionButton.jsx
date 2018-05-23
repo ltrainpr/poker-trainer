@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 class ActionButton extends Component {
   render() {
     return (
-      <button>{props.action}</button>
+      <button>{this.props.action}</button>
     )
   }
 }
