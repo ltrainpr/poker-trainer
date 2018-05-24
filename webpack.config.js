@@ -16,6 +16,7 @@ const config = {
     rules: [
      {
        test: /(\.css|.scss)$/,
+       exclude: /node_modules/,
        use: [{
            loader: "style-loader" // creates style nodes from JS strings
        }, {
@@ -26,6 +27,7 @@ const config = {
      },
      {
        test: /\.(jsx|js)?$/,
+       exclude: /node_modules/,
        use: [{
          loader: "babel-loader",
          options: {

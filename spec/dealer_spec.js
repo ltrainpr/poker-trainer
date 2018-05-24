@@ -4,8 +4,9 @@ var _ = require('underscore');
 
 describe("Dealer", () => {
   it("Deals two cards to every player", () => {
-    Dealer().deal();
-    expect(Game.players[_.random(9)].hand.length).toBe(2);
+    var dealer = Dealer();
+    dealer.deal();
+    expect(dealer.players[_.random(9)].hand.length).toBe(2);
   });
 
   it("Every card dealt gets popped off the array", () => {
@@ -15,10 +16,11 @@ describe("Dealer", () => {
     expect(dealer.currentDeck().length).toBe(32);
   });
 
-  it("Starting action should be on 3rd player after button", () => {
-    var blind = Game.button;
+  it("Action should be on 3rd player after button", () => {
     var dealer = Dealer();
-    expect(dealer.action).toEqual(Game.players[7]);
+    var underTheGun = dealer.getButtonPosition() + 3;
+    if(underTheGun > 9) { underTheGun = underTheGun.toString(10).split("")[1]; }
+    expect(dealer.action).toEqual(dealer.players[underTheGun]);
   });
 
   it("#dealFlop", () => {
@@ -50,13 +52,17 @@ describe("Dealer", () => {
 
   it("#nextHand", () => {
     var dealer = Dealer();
+    var button = dealer.getButtonPosition();
     dealer.deal();
     dealer.dealFlop();
     dealer.dealNext();
     dealer.dealNext();
     dealer.nextHand();
+
     expect(dealer.currentDeck().length).toBe(52);
     expect(dealer.communityCards().length).toBe(0);
-    expect(dealer.button()).toBe(5);
+
+    var nextButton = button === 9 ? 0 : button + 1;
+    expect(dealer.getButtonPosition()).toBe(nextButton);
   });
 });
