@@ -1,5 +1,18 @@
 body {
-  background: #ACCEEC;
-  color: #005CC5;
+  background: #336600;
+  color: white;
   text-align: center;
+}
+
+img {
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+
+img[data-src] {
+  opacity: 0;
+}
+
+.card {
+  width: 6em;
 }

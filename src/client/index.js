@@ -36,8 +36,7 @@ function Action() {
   return (
     <div>
       <div>
-        <ShowHand value={hand[0].value} suit={hand[0].suit} />
-        <ShowHand value={hand[1].value} suit={hand[1].suit} />
+        <ShowHand hand={hand} />
       </div>
       <div>
         <ActionButton action="Call" />
