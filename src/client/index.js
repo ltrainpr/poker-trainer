@@ -1,8 +1,8 @@
-import React from 'react';
-import { render } from 'react-dom';
-import ActionButton from './components/ActionButton.jsx';
-import ShowHand from './components/ShowHand.jsx';
-import styles from './scss/application.scss';
+import React from "react";
+import { render } from "react-dom";
+import ActionButton from "./components/ActionButton.jsx";
+import BettingContainer from "./components/BettingContainer.jsx";
+import styles from "./scss/application.scss";
 
 var Game = require("./game/game");
 var game = game || Game();
@@ -15,41 +15,25 @@ function startGame() {
   var smallBlind, bigBlind;
   var startingButton = button.generateButtonIndex();
 
-
   [smallBlind, bigBlind] = betting.blinds(players, startingButton);
   dealer.deal(players);
 
-  var action = game.betting.playerToAct(players, game.button.underTheGunIndex(startingButton));
+  var action = game.betting.playerToAct(
+    players,
+    game.button.underTheGunIndex(startingButton)
+  );
 
-  // action stops here until player looks at cards;
-  console.log("action stops here until player looks at cards");
-  console.log(action.hand);
-
-  // Setup event handlers for betting or folding;
-  return action.hand
-
+  return action;
 }
 
 function Action() {
-  var hand = startGame();
+  var player = startGame();
 
   return (
     <div>
-      <div>
-        <ShowHand hand={hand} />
-      </div>
-      <div>
-        <ActionButton action="Call" />
-        <ActionButton action="Bet" />
-        <ActionButton action="Raise" />
-        <ActionButton action="Fold" />
-      </div>
+      <BettingContainer player={player} game={game}/>
     </div>
   );
 }
 
-
-render(
-  <Action />,
-  document.getElementById('root')
-);
+render(<Action />, document.getElementById("root"));

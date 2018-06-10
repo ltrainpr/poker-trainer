@@ -2,9 +2,10 @@ var Betting = function() {
   const smallBlind = 1;
   const bigBlind = 2;
   var actionIndex;
+  var pot;
 
-  function playerToAct(players, underTheGun){
-    return players[getPlayerToActIndex(underTheGun)]
+  function playerToAct(players, underTheGun) {
+    return players[getPlayerToActIndex(underTheGun)];
   }
 
   function getPlayerToActIndex(underTheGun) {
@@ -13,15 +14,18 @@ var Betting = function() {
     switch (actionIndex) {
       case 10:
         actionIndex = 0;
+        break;
       case 11:
         actionIndex = 1;
+        break;
       case 12:
         actionIndex = 2;
+        break;
       default:
         actionIndex = actionIndex;
     }
 
-    return actionIndex
+    return actionIndex;
   }
 
   function blinds(players, button) {
@@ -48,20 +52,23 @@ var Betting = function() {
   }
 
   function playerBets(player, bet) {
-    if(player.money > bet) {
+    if (player.money > bet) {
       player.money = player.money - bet;
       pot = pot + bet;
       actionIndex += 1;
     } else {
-      console.log("Betting#playerBets: Player is attempting to bet more than he has available.");
+      console.log(
+        "Betting#playerBets: Player is attempting to bet more than he has available."
+      );
     }
 
-    return player;
+    return getPlayerToActIndex();
   }
 
   function playerFolds(player) {
     player.hand.length = 0;
     actionIndex += 1;
+    return getPlayerToActIndex();
   }
 
   return { playerToAct, blinds, playerBets, playerFolds };
