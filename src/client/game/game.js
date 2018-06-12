@@ -17,10 +17,9 @@ var Game = function() {
 function buttonIndex() {
   function generateButtonIndex() { return _.random(9); }
   function moveButton(button) { return button === 9 ? 0 : button + 1; }
-  function getButtonPosition() { return button; }
   function underTheGunIndex(button) { return button + 3; }
 
-  return { generateButtonIndex, moveButton, getButtonPosition, underTheGunIndex };
+  return { generateButtonIndex, moveButton, underTheGunIndex };
 }
 
 function createPlayers() {

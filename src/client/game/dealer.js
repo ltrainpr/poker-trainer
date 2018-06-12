@@ -1,16 +1,16 @@
 var Shuffler = require("./shuffler");
 
-var Dealer = function(players) {
+var Dealer = function() {
   var deck = deck || Shuffler();
   var communityCards = [];
 
-  function handIsOver() {
-    resetPlayerHands();
+  function handIsOver(players) {
+    resetPlayerHands(players);
     resetCommunityCards();
     resetDeck();
   }
 
-  function resetPlayerHands() {
+  function resetPlayerHands(players) {
     players.forEach((player) => { player.hand.length = 0; });
   }
 

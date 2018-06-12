@@ -1,31 +1,30 @@
-var Dealer = require("../dealer");
-var Game = require("../game");
+var Dealer = require("../src/client/game/dealer");
+var Game = require("../src/client/game/game");
 var _ = require('underscore');
 
 describe("Dealer", () => {
+  var players;
+
+  beforeEach(() => {
+    players = Game().players
+  });
+
   it("Deals two cards to every player", () => {
     var dealer = Dealer();
-    dealer.deal();
-    expect(dealer.players[_.random(9)].hand.length).toBe(2);
+    dealer.deal(players);
+    expect(players[_.random(9)].hand.length).toBe(2);
   });
 
   it("Every card dealt gets popped off the array", () => {
     var dealer = Dealer();
     expect(dealer.currentDeck().length).toBe(52);
-    dealer.deal();
+    dealer.deal(players);
     expect(dealer.currentDeck().length).toBe(32);
-  });
-
-  it("Action should be on 3rd player after button", () => {
-    var dealer = Dealer();
-    var underTheGun = dealer.getButtonPosition() + 3;
-    if(underTheGun > 9) { underTheGun = underTheGun.toString(10).split("")[1]; }
-    expect(dealer.action).toEqual(dealer.players[underTheGun]);
   });
 
   it("#dealFlop", () => {
     var dealer = Dealer();
-    dealer.deal();
+    dealer.deal(players);
     dealer.dealFlop();
     expect(dealer.currentDeck().length).toBe(29);
     expect(dealer.communityCards().length).toBe(3);
@@ -33,7 +32,7 @@ describe("Dealer", () => {
 
   it("deal the turn", () => {
     var dealer = Dealer();
-    dealer.deal();
+    dealer.deal(players);
     dealer.dealFlop();
     dealer.dealNext();
     expect(dealer.currentDeck().length).toBe(28);
@@ -42,7 +41,7 @@ describe("Dealer", () => {
 
   it("deal the river", () => {
     var dealer = Dealer();
-    dealer.deal();
+    dealer.deal(players);
     dealer.dealFlop();
     dealer.dealNext();
     dealer.dealNext();
@@ -52,17 +51,13 @@ describe("Dealer", () => {
 
   it("#nextHand", () => {
     var dealer = Dealer();
-    var button = dealer.getButtonPosition();
-    dealer.deal();
+    dealer.deal(players);
     dealer.dealFlop();
     dealer.dealNext();
     dealer.dealNext();
-    dealer.nextHand();
+    dealer.nextHand(players);
 
     expect(dealer.currentDeck().length).toBe(52);
     expect(dealer.communityCards().length).toBe(0);
-
-    var nextButton = button === 9 ? 0 : button + 1;
-    expect(dealer.getButtonPosition()).toBe(nextButton);
   });
 });

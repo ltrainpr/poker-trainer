@@ -12,13 +12,16 @@ class BettingContainer extends Component {
     this.nextPlayerHand = this.nextPlayerHand.bind(this);
     this.state = {
       bet: "",
+      player: this.props.player,
       hand: this.props.player.hand
     };
   }
 
-  nextPlayerHand(hand) {
+  nextPlayerHand(player) {
     this.setState({
-      hand: hand
+      player: player,
+      hand: player.hand,
+      bet: ""
     });
   }
 
@@ -34,37 +37,34 @@ class BettingContainer extends Component {
         <div>
           <ShowHand hand={this.state.hand} />
         </div>
+        <div>{this.state.player.name}</div>
         <div>
           <BetAmount updateFilter={this.bettingAmount} />
         </div>
         <div>
           <ActionButton
-            action="Call"
-            value="call"
+            value="Call"
+            player={this.state.player}
+            bet={this.state.bet}
+            nextPlayerHand={this.nextPlayerHand}
+            game={this.props.game}
+          />
+          <ActionButton
+            value="Bet"
             player={this.props.player}
             bet={this.state.bet}
             nextPlayerHand={this.nextPlayerHand}
             game={this.props.game}
           />
           <ActionButton
-            action="Bet"
-            value="bet"
+            value="Raise"
             player={this.props.player}
             bet={this.state.bet}
             nextPlayerHand={this.nextPlayerHand}
             game={this.props.game}
           />
           <ActionButton
-            action="Raise"
-            value="raise"
-            player={this.props.player}
-            bet={this.state.bet}
-            nextPlayerHand={this.nextPlayerHand}
-            game={this.props.game}
-          />
-          <ActionButton
-            action="Fold"
-            value="fold"
+            value="Fold"
             player={this.props.player}
             bet={this.state.bet}
             nextPlayerHand={this.nextPlayerHand}
