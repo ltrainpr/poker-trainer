@@ -1,36 +1,35 @@
 import React, { Component } from "react";
+import Betting from "../game/betting.js";
 
 class ActionButton extends Component {
   constructor(props) {
     super(props);
-
-    // This binding is necessary to make `this` work in the callback
+    this.betting = Betting();
     this.handleClick = this.handleClick.bind(this);
   }
 
   handleClick(e) {
     e.preventDefault();
-    var actionIndex, player;
+    var actionIndex;
     switch (this.props.value.toLowerCase()) {
       case "fold":
-        actionIndex = this.props.game.betting.playerFolds(this.props.player);
+        this.betting.playerFolds(this.props.player);
+        this.props.nextPlayerHand();
         break;
       case "call":
-        actionIndex = this.props.game.betting.playerBets(this.props.player, 2);
+        this.betting.playerBets(this.props.player, 2);
+        this.props.nextPlayerHand();
         break;
       case "bet":
-        actionIndex = this.props.game.betting.playerBets(
-          this.props.player,
-          this.props.bet
-        );
+        console.log('bet');
+        this.betting.playerBets(this.props.player, this.props.bet);
+        this.props.nextPlayerHand();
         break;
       default:
         console.log("ActionButton#handleClick value: " + this.props.value);
         return;
     }
 
-    player = this.props.game.players[actionIndex];
-    this.props.nextPlayerHand(player);
   }
 
   render() {

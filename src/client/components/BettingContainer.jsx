@@ -2,27 +2,56 @@ import React, { Component } from "react";
 import ShowHand from "./ShowHand.jsx";
 import BetAmount from "./BetAmount.jsx";
 import ActionButton from "./ActionButton.jsx";
+import Betting from "../game/betting.js";
+import Button from "../game/button.js";
+
 
 class BettingContainer extends Component {
   constructor(props) {
     super(props);
+    this.button = Button();
+    var startingButton = this.button.generateButtonIndex();
+    var underTheGunIndex = this.button.underTheGunIndex(startingButton)
+    var player = this.props.players[this.getPlayerToActIndex(underTheGunIndex)];
 
-    // This binding is necessary to make `this` work in the callback
+    var betting = Betting();
+    betting.blinds(this.props.players, startingButton);
+
     this.bettingAmount = this.bettingAmount.bind(this);
     this.nextPlayerHand = this.nextPlayerHand.bind(this);
+
     this.state = {
       bet: "",
-      player: this.props.player,
-      hand: this.props.player.hand
+      playerIndex: underTheGunIndex,
+      player: player,
+      hand: player.hand
     };
   }
 
-  nextPlayerHand(player) {
+  nextPlayerHand() {
+    var idx = this.state.playerIndex += 1;
+    var nextPlayerIndex = this.getPlayerToActIndex(idx);
+    var player = this.props.players[nextPlayerIndex];
+
     this.setState({
+      bet: "",
+      playerIndex: nextPlayerIndex,
       player: player,
-      hand: player.hand,
-      bet: ""
+      hand: player.hand
     });
+  }
+
+  getPlayerToActIndex(indx) {
+    switch (indx) {
+      case 10:
+        return 0;
+      case 11:
+        return 1;
+      case 12:
+        return 2;
+      default:
+        return indx;
+    }
   }
 
   bettingAmount(bet) {
@@ -47,28 +76,28 @@ class BettingContainer extends Component {
             player={this.state.player}
             bet={this.state.bet}
             nextPlayerHand={this.nextPlayerHand}
-            game={this.props.game}
+            players={this.props.players}
           />
           <ActionButton
             value="Bet"
-            player={this.props.player}
+            player={this.state.player}
             bet={this.state.bet}
             nextPlayerHand={this.nextPlayerHand}
-            game={this.props.game}
+            players={this.props.players}
           />
           <ActionButton
             value="Raise"
-            player={this.props.player}
+            player={this.state.player}
             bet={this.state.bet}
             nextPlayerHand={this.nextPlayerHand}
-            game={this.props.game}
+            players={this.props.players}
           />
           <ActionButton
             value="Fold"
-            player={this.props.player}
+            player={this.state.player}
             bet={this.state.bet}
             nextPlayerHand={this.nextPlayerHand}
-            game={this.props.game}
+            players={this.props.players}
           />
         </div>
       </div>

@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 
-class ShowHand extends Component {
+class PlayerCards extends Component {
+  imagePath(card) {
+    return (
+      "deck_of_cards/" + card.value.toString() + card.suit.charAt(0).toUpperCase() + ".png"
+    )
+  }
 
   render() {
     var firstCard = this.props.hand[0];
@@ -14,12 +19,6 @@ class ShowHand extends Component {
       </div>
     )
   }
-
-  imagePath(card) {
-    return (
-      "deck_of_cards/" + card.value.toString() + card.suit.charAt(0).toUpperCase() + ".png"
-    )
-  }
 }
 
-export default ShowHand;
+export default PlayerCards;
