@@ -1,3 +1,11 @@
+Data: Players
+
+- Game
+  - PlayerCards
+  - PlayerName
+  - BettingAmount
+  - BettingActions
+
 Texas Holdem Game:
 - 10 different 2 card hands and community cards.
   - Shuffler shuffles hands.

@@ -1,4 +1,4 @@
-var Player = require("../player");
+var Player = require("../src/client/game/player");
 
 describe("Player", () => {
   it("has name, hand, type, and money properties", () => {

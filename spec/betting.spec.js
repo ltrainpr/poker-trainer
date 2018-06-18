@@ -1,15 +1,19 @@
-var Betting = require("../betting");
+var Betting = require("../src/client/game/betting");
+var Game = require("../src/client/game/game");
 
 describe("Betting", () => {
-  var betting, dealer;
+  var betting, game, players;
 
   beforeEach(() => {
     betting = Betting();
+    game = Game();
+    players = game.players
   });
 
   it("Gets blinds from players", () => {
     var small, big;
-    [small, big] = betting.blinds()
+    var button = game.button.generateButtonIndex();
+    [small, big] = game.betting.blinds(players, button)
 
     var smallBeforeBlind = small.money;
     var bigBeforeBlind = big.money;
@@ -19,7 +23,8 @@ describe("Betting", () => {
   });
 
   it("#playerBets", () => {
-    var player = betting.playerBets(20);
+    var player = game.players[0]
+    game.betting.playerBets(player, 20);
     expect(player.money).toBe(180);
   });
 

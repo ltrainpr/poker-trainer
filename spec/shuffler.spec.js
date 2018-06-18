@@ -1,4 +1,4 @@
-var ShuffledDeck = require("../shuffler");
+var ShuffledDeck = require("../src/client/game/shuffler");
 
 describe("ShuffledDeck", () => {
   it("has 52 cards", () => {

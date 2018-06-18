@@ -5,7 +5,7 @@ var ThreeOfAKind = function(groupedCards) {
   var lowValue = null;
 
   function isThreeOfAKind() {
-    threeValues = _.pick(groupedCards, (value, key) => { return value.length === 3; });
+    var threeValues = _.pick(groupedCards, (value, key) => { return value.length === 3; });
 
     if(_.size(threeValues)) { setHighLowValues(threeValues); }
 
