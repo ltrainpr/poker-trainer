@@ -25,6 +25,7 @@ class BetAmount extends Component {
         ref="filterInput"
         onChange={this.handleFilterChange}
         placeholder="Betting Amount"
+        value={this.props.bet}
       />
     );
   }

@@ -1,3 +1,16 @@
+- Display how much is in the pot.
+  - Keep track of pot.
+- Display largest bet amount and how you much you need to put in
+  - Need to return bet from 'Betting#playerBets'
+  - Need players bet state tracking so we know when everybody has put in the required amount.
+    - On action from player need callback to check if betting round is over: Iterate over all players.
+    - Needs to skip players that fold (bet is "").  Or only pass in players currently in hand to children/inner views.
+  - When round is over add bets to the pot, clear that intermediate state, and deal flop community cards.
+
+
+- Need to display player money state.
+- BettingRound: every time player bets
+
 - Betting: Money tracking, distribution, and accounting.
   - Moves the button.
   - Initial/required bets.  The blinds 1/2 or 2/4.

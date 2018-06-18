@@ -21,7 +21,6 @@ class ActionButton extends Component {
         this.props.nextPlayerHand();
         break;
       case "bet":
-        console.log('bet');
         this.betting.playerBets(this.props.player, this.props.bet);
         this.props.nextPlayerHand();
         break;
@@ -29,7 +28,6 @@ class ActionButton extends Component {
         console.log("ActionButton#handleClick value: " + this.props.value);
         return;
     }
-
   }
 
   render() {

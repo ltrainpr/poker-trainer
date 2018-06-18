@@ -68,7 +68,7 @@ class BettingContainer extends Component {
         </div>
         <div>{this.state.player.name}</div>
         <div>
-          <BetAmount updateFilter={this.bettingAmount} />
+          <BetAmount updateFilter={this.bettingAmount} bet={this.state.bet} />
         </div>
         <div>
           <ActionButton
