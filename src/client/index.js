@@ -9,9 +9,12 @@ class PokerGame extends React.Component {
   render() {
     var game = game || Game();
     game.dealer.deal(game.players);
+
     return (
       <div>
-        <BettingContainer players={game.players} button={game.button} />
+        <BettingContainer
+          players={game.players}
+          button={game.button} />
       </div>
     );
   }

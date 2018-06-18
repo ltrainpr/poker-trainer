@@ -5,6 +5,7 @@ import ActionButton from "./ActionButton.jsx";
 import Betting from "../game/betting.js";
 import Button from "../game/button.js";
 import Pot from "./Pot.jsx";
+import HighestBet from "./HighestBet.jsx"
 
 
 class BettingContainer extends Component {
@@ -105,6 +106,9 @@ class BettingContainer extends Component {
         </div>
         <div>
           <Pot pot={this.state.pot} />
+        </div>
+        <div>
+          <HighestBet players={this.props.players} />
         </div>
       </div>
     );

@@ -29,7 +29,8 @@ var Betting = function() {
   function playerBets(player, bet) {
     if (player.money > bet) {
       player.money = player.money - bet;
-      pot = pot + bet;
+      player.bet = bet;
+      return bet;
     } else {
       console.log(
         "Betting#playerBets: Player is attempting to bet more than he has available."
