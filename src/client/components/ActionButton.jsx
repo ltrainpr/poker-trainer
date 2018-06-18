@@ -10,7 +10,7 @@ class ActionButton extends Component {
 
   handleClick(e) {
     e.preventDefault();
-    var actionIndex;
+    var actionIndex, bet;
     switch (this.props.value.toLowerCase()) {
       case "fold":
         this.betting.playerFolds(this.props.player);

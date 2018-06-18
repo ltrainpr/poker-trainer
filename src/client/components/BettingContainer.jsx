@@ -4,6 +4,7 @@ import BetAmount from "./BetAmount.jsx";
 import ActionButton from "./ActionButton.jsx";
 import Betting from "../game/betting.js";
 import Button from "../game/button.js";
+import Pot from "./Pot.jsx";
 
 
 class BettingContainer extends Component {
@@ -24,7 +25,8 @@ class BettingContainer extends Component {
       bet: "",
       playerIndex: underTheGunIndex,
       player: player,
-      hand: player.hand
+      hand: player.hand,
+      pot: 0
     };
   }
 
@@ -34,6 +36,7 @@ class BettingContainer extends Component {
     var player = this.props.players[nextPlayerIndex];
 
     this.setState({
+      pot: (parseInt(this.state.pot, 10) + parseInt(this.state.bet, 10)),
       bet: "",
       playerIndex: nextPlayerIndex,
       player: player,
@@ -99,6 +102,9 @@ class BettingContainer extends Component {
             nextPlayerHand={this.nextPlayerHand}
             players={this.props.players}
           />
+        </div>
+        <div>
+          <Pot pot={this.state.pot} />
         </div>
       </div>
     );

@@ -22,7 +22,6 @@
     - Indicates when the betting round is over.  (Something tells dealer to deal next round of card/cards).
 
 
-
 Thoughts
 - There needs to be a process/managing function that initiates/holds the state of the players and the pot.
 - This managing function will call on Dealer and Betting functions that will return copies of the altered player and pot state.
