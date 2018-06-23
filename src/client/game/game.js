@@ -15,6 +15,7 @@ var Game = function() {
 };
 
 function createPlayers() {
+  var player;
   var names =
   [
     "Amy",
@@ -30,8 +31,10 @@ function createPlayers() {
   ];
 
   var playersArray = [];
-  for (var i = 9; i >= 0; i--) {
-    playersArray.push(Player(names[i]));
+  var shuffledNames = _.shuffle(names)
+  for (var indx = 0, length = names.length; indx < length; indx++) {
+    player = Player(shuffledNames[indx], indx);
+    playersArray.push(player);
   }
 
   return playersArray;
