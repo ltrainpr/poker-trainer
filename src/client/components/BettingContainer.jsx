@@ -6,6 +6,7 @@ import Betting from "../game/betting.js";
 import Button from "../game/button.js";
 import Pot from "./Pot.jsx";
 import HighestBet from "./HighestBet.jsx"
+var _ = require('underscore');
 
 
 class BettingContainer extends Component {
@@ -21,6 +22,8 @@ class BettingContainer extends Component {
 
     this.bettingAmount = this.bettingAmount.bind(this);
     this.nextPlayerHand = this.nextPlayerHand.bind(this);
+    this.nextPlayerInHandIndex = this.nextPlayerInHandIndex.bind(this);
+    this.getPlayerToActIndex = this.getPlayerToActIndex.bind(this);
 
     this.state = {
       bet: "",
@@ -32,17 +35,28 @@ class BettingContainer extends Component {
   }
 
   nextPlayerHand() {
-    var idx = this.state.playerIndex += 1;
-    var nextPlayerIndex = this.getPlayerToActIndex(idx);
-    var player = this.props.players[nextPlayerIndex];
+    var player = this.nextPlayerInHandIndex();
+    var bet = this.state.bet.length === 0 ? 0 : parseInt(this.state.bet, 10)
+
 
     this.setState({
-      pot: (parseInt(this.state.pot, 10) + parseInt(this.state.bet, 10)),
+      pot: this.state.pot + bet,
       bet: "",
-      playerIndex: nextPlayerIndex,
+      playerIndex: player.seatIndex,
       player: player,
       hand: player.hand
     });
+  }
+
+  nextPlayerInHandIndex() {
+    var nextPlayer;
+    var nextPlayerInHandIndex = this.getPlayerToActIndex(this.state.player.seatIndex + 1);
+
+    for (var count = this.props.players.length - 1; count >= 0; count--) {
+      nextPlayer = _.find(this.props.players, (player) => { return player.seatIndex === nextPlayerInHandIndex });
+      if(nextPlayer.hand.length !== 0) { return nextPlayer; }
+      nextPlayerInHandIndex = this.getPlayerToActIndex(nextPlayer.seatIndex + 1);
+    };
   }
 
   getPlayerToActIndex(indx) {
