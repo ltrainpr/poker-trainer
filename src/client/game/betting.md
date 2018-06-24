@@ -6,6 +6,9 @@
     - On action from player need callback to check if betting round is over: Iterate over all players.
     - Needs to skip players that fold (bet is "").  Or only pass in players currently in hand to children/inner views.
   - When round is over add bets to the pot, clear that intermediate player bet state, and deal flop community cards.
+- Need to know when hand is over.
+  - Either everyone folds.  Only one player left with cards.  Check every betting round for single player with cards.
+  - Showdown on the river.  Betting is square between players in hand
 
 
 - Need to display player money state.

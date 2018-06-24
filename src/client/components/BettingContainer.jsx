@@ -37,7 +37,7 @@ class BettingContainer extends Component {
   nextPlayerHand() {
     var player = this.nextPlayerInHandIndex();
     var bet = this.state.bet.length === 0 ? 0 : parseInt(this.state.bet, 10)
-
+    player["bet"] = bet;
 
     this.setState({
       pot: this.state.pot + bet,
@@ -89,34 +89,20 @@ class BettingContainer extends Component {
           <BetAmount updateFilter={this.bettingAmount} bet={this.state.bet} />
         </div>
         <div>
-          <ActionButton
-            value="Call"
-            player={this.state.player}
-            bet={this.state.bet}
-            nextPlayerHand={this.nextPlayerHand}
-            players={this.props.players}
-          />
-          <ActionButton
-            value="Bet"
-            player={this.state.player}
-            bet={this.state.bet}
-            nextPlayerHand={this.nextPlayerHand}
-            players={this.props.players}
-          />
-          <ActionButton
-            value="Raise"
-            player={this.state.player}
-            bet={this.state.bet}
-            nextPlayerHand={this.nextPlayerHand}
-            players={this.props.players}
-          />
-          <ActionButton
-            value="Fold"
-            player={this.state.player}
-            bet={this.state.bet}
-            nextPlayerHand={this.nextPlayerHand}
-            players={this.props.players}
-          />
+          {
+            this.props.actions.map((action) => {
+              return (
+                <ActionButton
+                  key={action}
+                  value={action}
+                  player={this.state.player}
+                  bet={this.state.bet}
+                  nextPlayerHand={this.nextPlayerHand}
+                  players={this.props.players}
+                />
+              )
+            })
+          }
         </div>
         <div>
           <Pot pot={this.state.pot} />

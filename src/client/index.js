@@ -4,7 +4,6 @@ import BettingContainer from "./components/BettingContainer.jsx";
 import CommunityCards from "./components/CommunityCards.jsx";
 import styles from "./scss/application.scss";
 var _ = require('underscore');
-
 var Game = require("./game/game");
 
 class PokerGame extends React.Component {
@@ -13,6 +12,7 @@ class PokerGame extends React.Component {
     this.game = this.game || Game();
     this.players = this.game.players
     this.dealer = this.game.dealer
+    var actions = ["Call", "Bet", "Raise", "Fold"];
     this.dealer.deal(this.players);
     this.isBettingRoundOver = this.isBettingRoundOver.bind(this);
     this.state = {
@@ -56,12 +56,15 @@ class PokerGame extends React.Component {
           <BettingContainer
             players={this.game.players}
             button={this.game.button}
+            actions={actions}
             isBettingRoundOver={this.isBettingRoundOver} />
         </div>
         <div>
           {
             this.dealer.communityCards().map((card) => {
-              <CommunityCards card={card} round={this.state.round} />
+              return (
+                <CommunityCards key={card} card={card} round={this.state.round} />
+              )
             })
           }
         </div>
