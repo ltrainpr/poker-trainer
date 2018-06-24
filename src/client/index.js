@@ -12,16 +12,23 @@ class PokerGame extends React.Component {
     this.game = this.game || Game();
     this.players = this.game.players
     this.dealer = this.game.dealer
-    var actions = ["Call", "Bet", "Raise", "Fold"];
+    this.actions = ["Call", "Bet", "Raise", "Fold"];
     this.dealer.deal(this.players);
     this.isBettingRoundOver = this.isBettingRoundOver.bind(this);
+    this.playersInHand = this.playersInHand.bind(this);
+
     this.state = {
       round: 'preFlop',
+      players: this.players
     }
   }
 
+  playersInHand() {
+    return _.select(this.state.players, (player) => { return player.hand.length === 2; });
+  }
+
   isBettingRoundOver(highestBet) {
-    var betsMatch = _.all(this.players, (player) => {
+    var betsMatch = _.all(this.playersInHand(), (player) => {
       return (player.bet && player.bet === highestBet)
     })
 
@@ -54,16 +61,17 @@ class PokerGame extends React.Component {
       <div>
         <div>
           <BettingContainer
-            players={this.game.players}
+            players={this.state.players}
             button={this.game.button}
-            actions={actions}
+            actions={this.actions}
             isBettingRoundOver={this.isBettingRoundOver} />
         </div>
         <div>
           {
             this.dealer.communityCards().map((card) => {
+
               return (
-                <CommunityCards key={card} card={card} round={this.state.round} />
+                <CommunityCards key={card.value + "_" + card.suit} card={card} round={this.state.round} />
               )
             })
           }

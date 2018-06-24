@@ -9,9 +9,7 @@ class CommunityCards extends Component {
 
   render() {
     return (
-      <div>
-        <img id={card.value + "_" + card.suit} src={this.imagePath(card)} className="card" value={card.value} />
-      </div>
+        <img id={this.props.card.value + "_" + this.props.card.suit} src={this.imagePath(this.props.card)} className="card" value={this.props.card.value} />
     )
   }
 }

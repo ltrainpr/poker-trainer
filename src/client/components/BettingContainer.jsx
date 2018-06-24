@@ -6,6 +6,7 @@ import Betting from "../game/betting.js";
 import Button from "../game/button.js";
 import Pot from "./Pot.jsx";
 import HighestBet from "./HighestBet.jsx"
+import PlayerBet from "./PlayerBet.jsx"
 var _ = require('underscore');
 
 
@@ -24,7 +25,7 @@ class BettingContainer extends Component {
     this.nextPlayerHand = this.nextPlayerHand.bind(this);
     this.nextPlayerInHandIndex = this.nextPlayerInHandIndex.bind(this);
     this.getPlayerToActIndex = this.getPlayerToActIndex.bind(this);
-
+    this.highestBet = this.highestBet.bind(this);
     this.state = {
       bet: "",
       playerIndex: underTheGunIndex,
@@ -34,18 +35,29 @@ class BettingContainer extends Component {
     };
   }
 
+  highestBet() {
+    var maxBet = _.max(this.props.players, (player) => { return player.bet });
+    maxBet = _.isEmpty(maxBet) ? {bet: 0} : maxBet;
+    return maxBet;
+  }
+
   nextPlayerHand() {
-    var player = this.nextPlayerInHandIndex();
     var bet = this.state.bet.length === 0 ? 0 : parseInt(this.state.bet, 10)
-    player["bet"] = bet;
+    this.state.player["bet"] = bet;
+
+    var player = this.nextPlayerInHandIndex();
+    var maxBet = this.highestBet().bet;
 
     this.setState({
       pot: this.state.pot + bet,
       bet: "",
       playerIndex: player.seatIndex,
       player: player,
-      hand: player.hand
+      hand: player.hand,
+      maxBet: maxBet
     });
+
+    this.props.isBettingRoundOver(maxBet);
   }
 
   nextPlayerInHandIndex() {
@@ -108,7 +120,10 @@ class BettingContainer extends Component {
           <Pot pot={this.state.pot} />
         </div>
         <div>
-          <HighestBet players={this.props.players} />
+          <HighestBet highestBet={this.state.maxBet} />
+        </div>
+        <div>
+          <PlayerBet bet={this.state.player.bet} />
         </div>
       </div>
     );
