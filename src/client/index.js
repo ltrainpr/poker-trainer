@@ -1,11 +1,11 @@
 import React from "react";
 import { render } from "react-dom";
-import BettingContainer from "./components/BettingContainer.jsx";
-import CommunityCards from "./components/CommunityCards.jsx";
+import BettingContainer from "./components/BettingContainer";
+import CommunityCards from "./components/CommunityCards";
 import styles from "./scss/application.scss";
-var _ = require('underscore');
 
-var Game = require("./game/game");
+const _ = require('underscore');
+const Game = require("./game/game");
 
 class PokerGame extends React.Component {
   constructor() {
@@ -21,9 +21,9 @@ class PokerGame extends React.Component {
   }
 
   isBettingRoundOver(highestBet) {
-    var betsMatch = _.all(this.players, (player) => {
-      return (player.bet && player.bet === highestBet)
-    })
+    const betsMatch = _.all(this.players, (player) =>
+      (player.bet && player.bet === highestBet)
+    )
 
     if(betsMatch) {
       this.setState({
@@ -33,7 +33,8 @@ class PokerGame extends React.Component {
   }
 
   nextRound() {
-    switch(this.state.round) {
+    const { round } = this.state
+    switch(round) {
       case "preFlop":
         this.dealer.dealFlop();
         return "flop";
