@@ -10,30 +10,31 @@ class ActionButton extends Component {
 
   handleClick(e) {
     e.preventDefault();
-    var actionIndex, bet;
-    switch (this.props.value.toLowerCase()) {
+    const { player, bet, nextPlayerHand, value } = this.props;
+    switch (value.toLowerCase()) {
       case "fold":
-        this.betting.playerFolds(this.props.player);
-        this.props.nextPlayerHand();
+        this.betting.playerFolds(player);
+        nextPlayerHand();
         break;
       case "call":
-        this.betting.playerBets(this.props.player, 2);
-        this.props.nextPlayerHand();
+        this.betting.playerBets(player, 2);
+        nextPlayerHand();
         break;
       case "bet":
-        this.betting.playerBets(this.props.player, this.props.bet);
-        this.props.nextPlayerHand();
+        this.betting.playerBets(player, bet);
+        nextPlayerHand();
         break;
       default:
-        console.log("ActionButton#handleClick value: " + this.props.value);
-        return;
+        console.log(`ActionButton#handleClick value: ${value}`);
     }
   }
 
   render() {
+    const { value } = this.props;
+
     return (
-      <button onClick={this.handleClick} value={this.props.value}>
-        {this.props.value}
+      <button type="button" onClick={this.handleClick} value={ value }>
+        { value }
       </button>
     );
   }

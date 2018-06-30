@@ -1,11 +1,5 @@
-import React, { Component } from "react";
+import React from "react";
 
-class Pot extends Component {
-  render() {
-    return (
-      <h3>Pot: {this.props.pot}</h3>
-    );
-  }
-}
+const Pot = ({ pot }) => ( <h3>Pot: { pot }</h3> );
 
 export default Pot;

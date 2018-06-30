@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-var _ = require('underscore');
+
+const _ = require('underscore');
 
 class HighestBet extends Component {
   constructor(props) {
@@ -8,7 +9,8 @@ class HighestBet extends Component {
   }
 
   highestBet() {
-    var maxBet = _.max(this.props.players, (player) => { return player.bet });
+    const { players } = this.props;
+    const maxBet = _.max(players, (player) =>  player.bet );
     return _.isEmpty(maxBet) ? {bet: 0} : maxBet;
   }
 
