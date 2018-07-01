@@ -27,8 +27,8 @@ class PokerGame extends React.Component {
   isBettingRoundOver() {
     const highestBet = this.betting.highestBet(this.players)
     const betsMatch = _.all(this.playersInHand(), (player) =>
-      (player.bet && player.bet === highestBet)
-    )
+      (player.bet && player.bet === highestBet))
+
 
     if(betsMatch) {
       this.setState({
@@ -80,8 +80,7 @@ class PokerGame extends React.Component {
             this.dealer.communityCards().map((card) => {
               const key = `${card.value} ${card.suit}`
               return (<CommunityCards key={key} card={card} id={key} />)
-            }
-            )
+            })
           }
         </div>
       </div>

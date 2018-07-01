@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Betting from "../game/betting.js";
+import Betting from "../game/betting";
 
 class ActionButton extends Component {
   constructor(props) {
@@ -10,17 +10,21 @@ class ActionButton extends Component {
 
   handleClick(e) {
     e.preventDefault();
-    const { player, bet, nextPlayerHand, value } = this.props;
+    const { player, bet, nextPlayerHand, value, highestBet } = this.props;
     switch (value.toLowerCase()) {
       case "fold":
         this.betting.playerFolds(player);
         nextPlayerHand();
         break;
       case "call":
-        this.betting.playerBets(player, 2);
+        this.betting.playerBets(player, highestBet);
         nextPlayerHand();
         break;
       case "bet":
+        this.betting.playerBets(player, bet);
+        nextPlayerHand();
+        break;
+      case "raise":
         this.betting.playerBets(player, bet);
         nextPlayerHand();
         break;

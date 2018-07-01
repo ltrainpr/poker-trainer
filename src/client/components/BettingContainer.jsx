@@ -61,7 +61,7 @@ class BettingContainer extends Component {
       nextPlayer = this.nextPlayer(nextPlayerInHandIndex);
     };
 
-    return nextPlayerInHandIndex;
+    return nextPlayer;
   }
 
   nextPlayer(idx) {
@@ -72,9 +72,8 @@ class BettingContainer extends Component {
   nextPlayerHand() {
     const { bet, pot } = this.state;
     const { isBettingRoundOver } = this.props;
-    isBettingRoundOver();
     const player = this.nextPlayerInHandIndex();
-    const betAsInteger = bet.length === 0 ? 0 : parseInt(bet, 10)
+    const betAsInteger = parseInt(bet, 10) || 0
 
     this.setState({
       pot: pot + betAsInteger,
@@ -82,15 +81,18 @@ class BettingContainer extends Component {
       player,
       hand: player.hand
     });
+
+    isBettingRoundOver();
   }
 
   bettingAmount(bet) {
-    this.setState({ bet });
+    this.setState({bet: parseInt(bet, 10) });
   }
 
   render() {
     const { hand, player, bet, pot } = this.state;
     const { players, highestBet } = this.props;
+    const betAsInteger = parseInt(bet, 10) || 0;
 
     return (
       <div>
@@ -99,34 +101,35 @@ class BettingContainer extends Component {
         </div>
         <div>{player.name}</div>
         <div>
-          <BetAmount updateFilter={this.bettingAmount} bet={bet} />
+          <BetAmount updateFilter={this.bettingAmount} bet={betAsInteger} />
         </div>
         <div>
           <ActionButton
             value="Call"
             player={player}
-            bet={bet}
+            bet={betAsInteger}
             nextPlayerHand={this.nextPlayerHand}
             players={players}
+            highestBet={highestBet}
           />
           <ActionButton
             value="Bet"
             player={player}
-            bet={bet}
+            bet={betAsInteger}
             nextPlayerHand={this.nextPlayerHand}
             players={players}
           />
           <ActionButton
             value="Raise"
             player={player}
-            bet={bet}
+            bet={betAsInteger}
             nextPlayerHand={this.nextPlayerHand}
             players={players}
           />
           <ActionButton
             value="Fold"
             player={player}
-            bet={bet}
+            bet={betAsInteger}
             nextPlayerHand={this.nextPlayerHand}
             players={players}
           />
