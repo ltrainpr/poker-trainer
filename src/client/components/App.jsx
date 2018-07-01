@@ -17,6 +17,8 @@ class PokerGame extends React.Component {
     this.isBettingRoundOver = this.isBettingRoundOver.bind(this);
     this.playersInHand = this.playersInHand.bind(this);
     this.nextRound = this.nextRound.bind(this);
+    this.isHandOver = this.isHandOver.bind(this);
+    this.betsMatch = this.betsMatch.bind(this);
 
     this.state = {
       round: 'preFlop',
@@ -24,20 +26,38 @@ class PokerGame extends React.Component {
     }
   }
 
-  isBettingRoundOver() {
+  betsMatch() {
     const highestBet = this.betting.highestBet(this.players)
-    const betsMatch = _.all(this.playersInHand(), (player) =>
-      (player.bet && player.bet === highestBet)
-    )
+    this.setState({highestBet})
+    return _.all(this.playersInHand(), (player) =>
+      (player.bet && player.bet === highestBet))
+  }
 
-    if(betsMatch) {
-      this.setState({
-        round: this.nextRound(),
-        highestBet
-      })
+  isHandOver(bettingRoundComplete) {
+    const { round } = this.state;
+
+    if (this.playersInHand().length === 1) {
+      this.dealer.nextHand(this.players)
+      return true;
     }
 
-    this.setState({highestBet})
+    if (round === 'river' && bettingRoundComplete) {
+      this.dealer.nextHand(this.players)
+      return true
+    }
+
+    return false;
+  }
+
+  isBettingRoundOver() {
+    const bettingRoundComplete = this.betsMatch();
+    this.isHandOver(bettingRoundComplete);
+
+    if(bettingRoundComplete) {
+      this.setState({
+        round: this.nextRound()
+      })
+    }
   }
 
   playersInHand() {
@@ -73,15 +93,15 @@ class PokerGame extends React.Component {
             players={this.game.players}
             button={this.game.button}
             isBettingRoundOver={this.isBettingRoundOver}
-            highestBet={highestBet} />
+            highestBet={highestBet}
+            isHandOver={this.isHandOver} />
         </div>
         <div>
           {
             this.dealer.communityCards().map((card) => {
               const key = `${card.value} ${card.suit}`
               return (<CommunityCards key={key} card={card} id={key} />)
-            }
-            )
+            })
           }
         </div>
       </div>
