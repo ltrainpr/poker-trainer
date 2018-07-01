@@ -11,23 +11,37 @@ class PokerGame extends React.Component {
     this.game = this.game || Game();
     this.players = this.game.players
     this.dealer = this.game.dealer
+    this.betting = this.game.betting
     this.dealer.deal(this.players);
+
     this.isBettingRoundOver = this.isBettingRoundOver.bind(this);
+    this.playersInHand = this.playersInHand.bind(this);
+    this.nextRound = this.nextRound.bind(this);
+
     this.state = {
       round: 'preFlop',
+      highestBet: this.betting.highestBet(this.players)
     }
   }
 
-  isBettingRoundOver(highestBet) {
-    const betsMatch = _.all(this.players, (player) =>
+  isBettingRoundOver() {
+    const highestBet = this.betting.highestBet(this.players)
+    const betsMatch = _.all(this.playersInHand(), (player) =>
       (player.bet && player.bet === highestBet)
     )
 
     if(betsMatch) {
       this.setState({
-        round: this.nextRound()
+        round: this.nextRound(),
+        highestBet
       })
     }
+
+    this.setState({highestBet})
+  }
+
+  playersInHand() {
+    return this.players.filter(player => (player.hand.length === 2))
   }
 
   nextRound() {
@@ -44,13 +58,13 @@ class PokerGame extends React.Component {
         this.dealer.dealNext();
         return "river";
       default:
-        this.dealer.nextHand();
+        this.dealer.nextHand(this.players);
         return "preFlop";
     }
   }
 
   render() {
-    const { round } = this.state;
+    const { highestBet } = this.state;
 
     return (
       <div>
@@ -58,12 +72,15 @@ class PokerGame extends React.Component {
           <BettingContainer
             players={this.game.players}
             button={this.game.button}
-            isBettingRoundOver={this.isBettingRoundOver} />
+            isBettingRoundOver={this.isBettingRoundOver}
+            highestBet={highestBet} />
         </div>
         <div>
           {
-            this.dealer.communityCards().map((card) =>
-              <CommunityCards card={card} round={ round } />
+            this.dealer.communityCards().map((card) => {
+              const key = `${card.value} ${card.suit}`
+              return (<CommunityCards key={key} card={card} id={key} />)
+            }
             )
           }
         </div>

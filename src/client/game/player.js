@@ -1,7 +1,7 @@
-var _ = require('underscore');
+const _ = require('underscore');
 
-var Player = function(name, idx) {
-  var playingStyles =
+function Player(name, idx) {
+  const playingStyles =
   [
     "Tight passive",
     "Tight aggressive",
@@ -10,7 +10,7 @@ var Player = function(name, idx) {
   ];
 
   return {
-    name: name,
+    name,
     hand: [],
     type: playingStyles[_.random(3)],
     money: 200,

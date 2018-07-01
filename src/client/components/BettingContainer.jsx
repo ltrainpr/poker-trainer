@@ -20,8 +20,8 @@ class BettingContainer extends Component {
     const underTheGunIndex = this.button.underTheGunIndex(startingButton)
     const player = players[BettingContainer.getPlayerToActIndex(underTheGunIndex)];
 
-    const betting = Betting();
-    betting.blinds(players, startingButton);
+    this.betting = Betting();
+    this.betting.blinds(players, startingButton);
 
     this.bettingAmount = this.bettingAmount.bind(this);
     this.nextPlayerHand = this.nextPlayerHand.bind(this);
@@ -71,6 +71,8 @@ class BettingContainer extends Component {
 
   nextPlayerHand() {
     const { bet, pot } = this.state;
+    const { isBettingRoundOver } = this.props;
+    isBettingRoundOver();
     const player = this.nextPlayerInHandIndex();
     const betAsInteger = bet.length === 0 ? 0 : parseInt(bet, 10)
 
@@ -88,7 +90,7 @@ class BettingContainer extends Component {
 
   render() {
     const { hand, player, bet, pot } = this.state;
-    const { players } = this.props;
+    const { players, highestBet } = this.props;
 
     return (
       <div>
@@ -133,7 +135,7 @@ class BettingContainer extends Component {
           <Pot pot={pot} />
         </div>
         <div>
-          <HighestBet players={players} />
+          <HighestBet bet={highestBet} />
         </div>
       </div>
     );

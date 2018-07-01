@@ -1,22 +1,12 @@
-var _ = require('underscore');
-var Player = require("./player");
-var Dealer = require("./dealer");
-var Betting = require("./betting");
-var Button = require("./button");
-
-var Game = function() {
-  var pot = 0;
-  var players = players || createPlayers();
-  var button = button || Button();
-  var dealer = dealer || Dealer();
-  var betting = betting || Betting();
-
-  return { players, button, dealer, betting };
-};
+const _ = require('underscore');
+const Player = require("./player");
+const Dealer = require("./dealer");
+const Betting = require("./betting");
+const Button = require("./button");
 
 function createPlayers() {
-  var player;
-  var names =
+  let player;
+  const names =
   [
     "Amy",
     "Howard",
@@ -30,15 +20,24 @@ function createPlayers() {
     "Josh"
   ];
 
-  var playersArray = [];
-  var shuffledNames = _.shuffle(names)
-  for (var indx = 0, length = names.length; indx < length; indx++) {
+  const playersArray = [];
+  const shuffledNames = _.shuffle(names)
+  for (let indx = 0, { length } = names; indx < length; indx += 1) {
     player = Player(shuffledNames[indx], indx);
     playersArray.push(player);
   }
 
   return playersArray;
 }
+
+function Game() {
+  const players = createPlayers();
+  const button = Button();
+  const dealer = Dealer();
+  const betting = Betting();
+
+  return { players, button, dealer, betting };
+};
 
 
 module.exports = Game;
