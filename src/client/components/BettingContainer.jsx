@@ -27,6 +27,7 @@ class BettingContainer extends Component {
     this.nextPlayerHand = this.nextPlayerHand.bind(this);
     this.nextPlayerInHandIndex = this.nextPlayerInHandIndex.bind(this);
     this.nextPlayer = this.nextPlayer.bind(this);
+    this.playersInHand = this.playersInHand.bind(this);
 
     this.state = {
       bet: "",
@@ -69,9 +70,17 @@ class BettingContainer extends Component {
     return _.find(players, (pokerPlayer) => pokerPlayer.seatIndex === idx )
   }
 
+  playersInHand() {
+    const { players } = this.props;
+    return players.filter(player => (player.hand.length === 2))
+  }
+
   nextPlayerHand() {
     const { bet, pot } = this.state;
-    const { isBettingRoundOver } = this.props;
+    const { isBettingRoundOver, isHandOver } = this.props;
+
+    if (isHandOver()) { return false }
+
     const player = this.nextPlayerInHandIndex();
     const betAsInteger = parseInt(bet, 10) || 0
 
@@ -83,6 +92,7 @@ class BettingContainer extends Component {
     });
 
     isBettingRoundOver();
+    return true;
   }
 
   bettingAmount(bet) {

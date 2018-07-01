@@ -1,3 +1,9 @@
+- Analyze/Evaluate hands in each round for each player.
+- Display winning hand.
+
+- Add a deal next hand button:
+  - Deals next hand.
+
 Data: Players
 
 - Game
