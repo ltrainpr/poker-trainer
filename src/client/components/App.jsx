@@ -93,8 +93,7 @@ class PokerGame extends React.Component {
             players={this.game.players}
             button={this.game.button}
             isBettingRoundOver={this.isBettingRoundOver}
-            highestBet={highestBet}
-            isHandOver={this.isHandOver} />
+            highestBet={highestBet} />
         </div>
         <div>
           {

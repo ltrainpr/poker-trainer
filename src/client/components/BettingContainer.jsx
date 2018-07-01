@@ -77,10 +77,7 @@ class BettingContainer extends Component {
 
   nextPlayerHand() {
     const { bet, pot } = this.state;
-    const { isBettingRoundOver, isHandOver } = this.props;
-
-    if (isHandOver()) { return false }
-
+    const { isBettingRoundOver } = this.props;
     const player = this.nextPlayerInHandIndex();
     const betAsInteger = parseInt(bet, 10) || 0
 
