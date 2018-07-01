@@ -1,20 +1,11 @@
-var Betting = function() {
+const _ = require('underscore');
+
+function Betting() {
   const smallBlind = 1;
   const bigBlind = 2;
-  var pot;
-
-  function blinds(players, button) {
-    var small = button + 1 === 10 ? players[0] : players[button];
-    var big = players[bigBlindIndex(button)];
-
-    small.money = small.money - smallBlind;
-    big.money = big.money - bigBlind;
-
-    return [small, big];
-  }
 
   function bigBlindIndex(button) {
-    var playerIndex = button + 2;
+    const playerIndex = button + 2;
 
     switch (playerIndex) {
       case 10:
@@ -26,23 +17,37 @@ var Betting = function() {
     }
   }
 
+  function blinds(players, button) {
+    const small = button + 1 === 10 ? players[0] : players[button];
+    const big = players[bigBlindIndex(button)];
+
+    small.money -= smallBlind;
+    big.money -= bigBlind;
+
+    return [small, big];
+  }
+
   function playerBets(player, bet) {
-    if (player.money > bet) {
-      player.money = player.money - bet;
-      player.bet = bet;
-      return bet;
-    } else {
-      console.log(
-        "Betting#playerBets: Player is attempting to bet more than he has available."
-      );
+    const currentPlayer = player;
+    if (currentPlayer.money > bet) {
+      currentPlayer.money -= bet;
+      currentPlayer.bet = bet;
     }
+
+    return currentPlayer;
   }
 
   function playerFolds(player) {
-    player.hand.length = 0;
+    const currentPlayer = player;
+    currentPlayer.hand.length = 0;
   }
 
-  return { blinds, playerBets, playerFolds };
+  function highestBet(players) {
+    const maxBet = _.max(players, (player) =>  player.bet );
+    return _.isEmpty(maxBet) ? 0 : maxBet.bet;
+  }
+
+  return { blinds, playerBets, playerFolds, highestBet };
 };
 
 module.exports = Betting;

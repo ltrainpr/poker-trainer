@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 
 class CommunityCards extends Component {
-  imagePath(card) {
+  imagePath() {
+    const { card } = this.props;
     return (
-      "deck_of_cards/" + card.value.toString() + card.suit.charAt(0).toUpperCase() + ".png"
+      `deck_of_cards/${card.value.toString()}${card.suit.charAt(0).toUpperCase()}.png`
     )
   }
 
   render() {
+    const { card, id } = this.props;
     return (
-      <div>
-        <img id={card.value + "_" + card.suit} src={this.imagePath(card)} className="card" value={card.value} />
-      </div>
+      <img id={id} src={this.imagePath()} className="card" value={card.value} alt="card" />
     )
   }
 }

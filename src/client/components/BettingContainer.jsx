@@ -1,65 +1,42 @@
 import React, { Component } from "react";
-import ShowHand from "./ShowHand.jsx";
-import BetAmount from "./BetAmount.jsx";
-import ActionButton from "./ActionButton.jsx";
-import Betting from "../game/betting.js";
-import Button from "../game/button.js";
-import Pot from "./Pot.jsx";
-import HighestBet from "./HighestBet.jsx"
-var _ = require('underscore');
+import ShowHand from "./ShowHand";
+import BetAmount from "./BetAmount";
+import ActionButton from "./ActionButton";
+import Betting from "../game/betting";
+import Button from "../game/button";
+import Pot from "./Pot";
+import HighestBet from "./HighestBet"
+
+const _ = require('underscore');
 
 
 class BettingContainer extends Component {
   constructor(props) {
     super(props);
-    this.button = Button();
-    var startingButton = this.button.generateButtonIndex();
-    var underTheGunIndex = this.button.underTheGunIndex(startingButton)
-    var player = this.props.players[this.getPlayerToActIndex(underTheGunIndex)];
+    const { players } = this.props;
 
-    var betting = Betting();
-    betting.blinds(this.props.players, startingButton);
+    this.button = Button();
+    const startingButton = this.button.generateButtonIndex();
+    const underTheGunIndex = this.button.underTheGunIndex(startingButton)
+    const player = players[BettingContainer.getPlayerToActIndex(underTheGunIndex)];
+
+    this.betting = Betting();
+    this.betting.blinds(players, startingButton);
 
     this.bettingAmount = this.bettingAmount.bind(this);
     this.nextPlayerHand = this.nextPlayerHand.bind(this);
     this.nextPlayerInHandIndex = this.nextPlayerInHandIndex.bind(this);
-    this.getPlayerToActIndex = this.getPlayerToActIndex.bind(this);
+    this.nextPlayer = this.nextPlayer.bind(this);
 
     this.state = {
       bet: "",
-      playerIndex: underTheGunIndex,
-      player: player,
+      player,
       hand: player.hand,
       pot: 0
     };
   }
 
-  nextPlayerHand() {
-    var player = this.nextPlayerInHandIndex();
-    var bet = this.state.bet.length === 0 ? 0 : parseInt(this.state.bet, 10)
-
-
-    this.setState({
-      pot: this.state.pot + bet,
-      bet: "",
-      playerIndex: player.seatIndex,
-      player: player,
-      hand: player.hand
-    });
-  }
-
-  nextPlayerInHandIndex() {
-    var nextPlayer;
-    var nextPlayerInHandIndex = this.getPlayerToActIndex(this.state.player.seatIndex + 1);
-
-    for (var count = this.props.players.length - 1; count >= 0; count--) {
-      nextPlayer = _.find(this.props.players, (player) => { return player.seatIndex === nextPlayerInHandIndex });
-      if(nextPlayer.hand.length !== 0) { return nextPlayer; }
-      nextPlayerInHandIndex = this.getPlayerToActIndex(nextPlayer.seatIndex + 1);
-    };
-  }
-
-  getPlayerToActIndex(indx) {
+  static getPlayerToActIndex(indx) {
     switch (indx) {
       case 10:
         return 0;
@@ -72,57 +49,93 @@ class BettingContainer extends Component {
     }
   }
 
-  bettingAmount(bet) {
+  nextPlayerInHandIndex() {
+    const { players } = this.props;
+    const { player } = this.state;
+    let nextPlayerInHandIndex = BettingContainer.getPlayerToActIndex(player.seatIndex + 1);
+    let nextPlayer = this.nextPlayer(nextPlayerInHandIndex);
+
+    for (let count = players.length - 1; count >= 0; count-= 1) {
+      if(nextPlayer.hand.length !== 0) { return nextPlayer; }
+      nextPlayerInHandIndex = BettingContainer.getPlayerToActIndex(nextPlayer.seatIndex + 1);
+      nextPlayer = this.nextPlayer(nextPlayerInHandIndex);
+    };
+
+    return nextPlayerInHandIndex;
+  }
+
+  nextPlayer(idx) {
+    const { players } = this.props;
+    return _.find(players, (pokerPlayer) => pokerPlayer.seatIndex === idx )
+  }
+
+  nextPlayerHand() {
+    const { bet, pot } = this.state;
+    const { isBettingRoundOver } = this.props;
+    isBettingRoundOver();
+    const player = this.nextPlayerInHandIndex();
+    const betAsInteger = bet.length === 0 ? 0 : parseInt(bet, 10)
+
     this.setState({
-      bet: bet
+      pot: pot + betAsInteger,
+      bet: "",
+      player,
+      hand: player.hand
     });
   }
 
+  bettingAmount(bet) {
+    this.setState({ bet });
+  }
+
   render() {
+    const { hand, player, bet, pot } = this.state;
+    const { players, highestBet } = this.props;
+
     return (
       <div>
         <div>
-          <ShowHand hand={this.state.hand} />
+          <ShowHand hand={hand} />
         </div>
-        <div>{this.state.player.name}</div>
+        <div>{player.name}</div>
         <div>
-          <BetAmount updateFilter={this.bettingAmount} bet={this.state.bet} />
+          <BetAmount updateFilter={this.bettingAmount} bet={bet} />
         </div>
         <div>
           <ActionButton
             value="Call"
-            player={this.state.player}
-            bet={this.state.bet}
+            player={player}
+            bet={bet}
             nextPlayerHand={this.nextPlayerHand}
-            players={this.props.players}
+            players={players}
           />
           <ActionButton
             value="Bet"
-            player={this.state.player}
-            bet={this.state.bet}
+            player={player}
+            bet={bet}
             nextPlayerHand={this.nextPlayerHand}
-            players={this.props.players}
+            players={players}
           />
           <ActionButton
             value="Raise"
-            player={this.state.player}
-            bet={this.state.bet}
+            player={player}
+            bet={bet}
             nextPlayerHand={this.nextPlayerHand}
-            players={this.props.players}
+            players={players}
           />
           <ActionButton
             value="Fold"
-            player={this.state.player}
-            bet={this.state.bet}
+            player={player}
+            bet={bet}
             nextPlayerHand={this.nextPlayerHand}
-            players={this.props.players}
+            players={players}
           />
         </div>
         <div>
-          <Pot pot={this.state.pot} />
+          <Pot pot={pot} />
         </div>
         <div>
-          <HighestBet players={this.props.players} />
+          <HighestBet bet={highestBet} />
         </div>
       </div>
     );
