@@ -1,23 +1,15 @@
-var _ = require('underscore');
+const _ = require('underscore');
 
-var ThreeOfAKind = function(groupedCards) {
-  var highValue;
-  var lowValue = null;
-
-  function isThreeOfAKind() {
-    var threeValues = _.pick(groupedCards, (value, key) => { return value.length === 3; });
-
-    if(_.size(threeValues)) { setHighLowValues(threeValues); }
-
-    return !_.isEmpty(threeValues);
-  }
+function ThreeOfAKind(groupedCards) {
+  let highValue;
+  let lowValue = null;
 
   function setHighLowValues(values) {
-    var val = _.keys(values);
+    const val = _.keys(values);
 
     switch(val.length) {
       case 2:
-        val.sort((a,b) => { return a - b; });
+        val.sort((a,b) => a - b );
         highValue = parseInt(val[1], 10);
         lowValue = parseInt(val[0], 10);
         break;
@@ -25,8 +17,16 @@ var ThreeOfAKind = function(groupedCards) {
         highValue = parseInt(val[0], 10);
         break;
       default:
-        return;
+        break;
     }
+  }
+
+  function isThreeOfAKind() {
+    const threeValues = _.pick(groupedCards, (value) => value.length === 3 );
+
+    if(_.size(threeValues)) { setHighLowValues(threeValues); }
+
+    return !_.isEmpty(threeValues);
   }
 
   return {

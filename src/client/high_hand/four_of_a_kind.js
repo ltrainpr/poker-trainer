@@ -1,12 +1,12 @@
-var _ = require('underscore');
+const _ = require('underscore');
 
-var FourOfAKind = function(groupedCards) {
-  var fourValue;
+function FourOfAKind(groupedCards) {
+  let fourValue;
 
   function isFourOfAKind() {
-    fourValue = _.findKey(groupedCards, (value, key) => { return value.length === 4; });
+    fourValue = _.findKey(groupedCards, (value) => value.length === 4 );
 
-    return fourValue ? true : false;
+    return fourValue !== undefined;
   }
 
   return {

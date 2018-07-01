@@ -1,19 +1,19 @@
-var _ = require('underscore');
-var PairHelper = require('./pair_helper');
+const _ = require('underscore');
+const PairHelper = require('./pair_helper');
 
-var onePair = function(cards) {
-  var sortedPairs = {};
+function onePair(cards) {
+  let sortedPairs = {};
 
   function pair() {
-    var pairs = _.pick(cards, (value, key) => { return value.length === 2; });
+    const pairs = _.pick(cards, (value) => value.length === 2);
     if(_.size(pairs) === 0) { return false; }
 
     sortedPairs = PairHelper.sortKeys(pairs);
-    return sortedPairs.length === 1 ? true : false;
+    return sortedPairs.length === 1;
   }
 
   function values() {
-    var result = {};
+    let result = {};
 
     if( sortedPairs.length === 1) {
       result = {

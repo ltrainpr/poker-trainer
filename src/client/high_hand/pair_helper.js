@@ -1,25 +1,29 @@
-var _ = require('underscore');
+const _ = require('underscore');
 
-var PairHelper = (function() {
+function PairHelper() {
+  function kicker(cards) {
+    const singles = _.pick(cards, value => value.length === 1);
+    const sortedValues = this.sortKeys(singles);
+
+    return sortedValues[0];
+  }
+
+  function sortKeys(filteredCards) {
+    return (
+      _.chain(filteredCards)
+      .keys()
+      .map((num) => typeof num === "string" ? parseInt(num, 10) : num )
+      .sort((a,b) => a - b )
+      .reverse()
+      .value()
+    );
+  }
+
+
   return {
-    kicker: function(cards) {
-      var singles = _.pick(cards, (value, key) => { return value.length === 1; });
-      var sortedValues = this.sortKeys(singles);
-
-      return sortedValues[0];
-    },
-
-    sortKeys: function(filteredCards) {
-      return (
-        _.chain(filteredCards)
-        .keys()
-        .map(function(num) { return typeof num === "string" ? parseInt(num, 10) : num; })
-        .sort((a,b) => { return a - b; })
-        .reverse()
-        .value()
-      );
-    }
+    kicker,
+    sortKeys
   };
-})();
+};
 
-module.exports = PairHelper;
+module.exports = PairHelper();

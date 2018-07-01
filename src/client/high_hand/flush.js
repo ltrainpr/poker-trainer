@@ -1,28 +1,28 @@
-var _ = require('underscore');
+const _ = require('underscore');
 
-var Flush = function(cards) {
-  var suit;
-  var grouped = _.groupBy(cards, (card) => { return card.suit; });
+function Flush(cards) {
+  let suit;
+  const grouped = _.groupBy(cards, card => card.suit );
 
   function isFlush() {
-    suit = _.findKey(grouped, (value, key, obj) => {
-      return value.length > 4;
-    });
+    suit = _.findKey(grouped, (value) => value.length > 4 );
 
-    return suit;
+    return suit !== undefined;
   }
 
   function flushValue() {
     if(suit) {
-      return _.max(grouped[suit], (group) => { return group.value; }).value;
+      return _.max(grouped[suit], group => group.value ).value;
     }
+
+    return false;
   }
 
   return {
-    isHand: isFlush() ? true : false,
+    isHand: isFlush(),
     hand:   {
       hand: 'flush',
-      suit: suit,
+      suit,
       value: flushValue()
     },
   };
