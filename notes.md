@@ -1,8 +1,16 @@
+- Show hand is getting undefined/player when a single player is left after any given betting round.
+- Flop, Turn, River rounds should start with player closest to under the gun player after bets are square/in.
+
 - Analyze/Evaluate hands in each round for each player.
-- Display winning hand.
 
 - Add a deal next hand button:
   - Deals next hand.
+
+
+TODO:
+- All in split pots.
+- Add in check button/action.  Moves to next player without betting, assuming no other player has bet.
+- If all players fold it should ante money to big blind.
 
 Data: Players
 

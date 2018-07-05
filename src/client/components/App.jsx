@@ -1,11 +1,13 @@
 import React from "react";
 import BettingContainer from "./BettingContainer";
 import CommunityCards from "./CommunityCards";
+import HighestHand from "./HighestHand"
 
 const _ = require('underscore');
 const Game = require("../game/game");
+const HighHand = require("../high_hand/high_hand")
 
-class PokerGame extends React.Component {
+class App extends React.Component {
   constructor() {
     super();
     this.game = this.game || Game();
@@ -19,10 +21,13 @@ class PokerGame extends React.Component {
     this.nextRound = this.nextRound.bind(this);
     this.isHandOver = this.isHandOver.bind(this);
     this.betsMatch = this.betsMatch.bind(this);
+    this.evaluateHands = this.evaluateHands.bind(this);
+    this.clearPlayerBets = this.clearPlayerBets.bind(this);
 
     this.state = {
       round: 'preFlop',
-      highestBet: this.betting.highestBet(this.players)
+      highestBet: 0,
+      evaluatedHands: []
     }
   }
 
@@ -31,6 +36,16 @@ class PokerGame extends React.Component {
     this.setState({highestBet})
     return _.all(this.playersInHand(), (player) =>
       (player.bet && player.bet === highestBet))
+  }
+
+  evaluateHands() {
+    const players = this.playersInHand()
+    const communityCards = this.dealer.communityCards()
+
+     return players.map(player => {
+      const cards = player.hand.concat(communityCards);
+      return {highHand: HighHand(cards), cards: player.hand};
+    })
   }
 
   isHandOver(bettingRoundComplete) {
@@ -42,11 +57,22 @@ class PokerGame extends React.Component {
     }
 
     if (round === 'river' && bettingRoundComplete) {
-      this.dealer.nextHand(this.players)
+      this.setState({
+        evaluatedHands: this.evaluateHands()
+      })
+      // this.dealer.nextHand(this.players)
       return true
     }
 
     return false;
+  }
+
+  clearPlayerBets() {
+    this.playersInHand().forEach(pokerPlayer => {
+      const player = pokerPlayer;
+      player.bet = 0;
+      return player;
+    })
   }
 
   isBettingRoundOver() {
@@ -54,8 +80,14 @@ class PokerGame extends React.Component {
     this.isHandOver(bettingRoundComplete);
 
     if(bettingRoundComplete) {
+      this.clearPlayerBets();
       this.setState({
-        round: this.nextRound()
+        round: this.nextRound(),
+        highestBet: 0
+      })
+    } else {
+      this.setState({
+        highestBet: this.betting.highestBet(this.players)
       })
     }
   }
@@ -65,7 +97,7 @@ class PokerGame extends React.Component {
   }
 
   nextRound() {
-    const { round } = this.state
+    const { round } = this.state;
 
     switch(round) {
       case "preFlop":
@@ -78,7 +110,6 @@ class PokerGame extends React.Component {
         this.dealer.dealNext();
         return "river";
       default:
-        this.dealer.nextHand(this.players);
         return "preFlop";
     }
   }
@@ -103,9 +134,16 @@ class PokerGame extends React.Component {
             })
           }
         </div>
+        <div>
+          {
+            this.state.evaluatedHands.map((obj, idx) => {
+              return <HighestHand key={idx} result={obj.highHand} cards={obj.cards} />
+            })
+          }
+        </div>
       </div>
     );
   }
 }
 
-export default PokerGame;
+export default App;

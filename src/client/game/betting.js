@@ -40,6 +40,7 @@ function Betting() {
   function playerFolds(player) {
     const currentPlayer = player;
     currentPlayer.hand.length = 0;
+    currentPlayer.bet = 0;
   }
 
   function highestBet(players) {
