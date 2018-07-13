@@ -114,7 +114,7 @@ class App extends React.Component {
   }
 
   render() {
-    const { highestBet } = this.state;
+    const { highestBet, evaluatedHands } = this.state;
 
     return (
       <div>
@@ -135,9 +135,9 @@ class App extends React.Component {
         </div>
         <div>
           {
-            this.state.evaluatedHands.map((obj, idx) => {
-              return <HighestHand key={idx} result={obj.highHand} cards={obj.cards} />
-            })
+            evaluatedHands.map((obj, idx) =>
+              <HighestHand key={idx} result={obj.highHand} cards={obj.cards} />
+            )
           }
         </div>
       </div>

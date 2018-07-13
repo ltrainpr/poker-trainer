@@ -81,6 +81,8 @@ class BettingContainer extends Component {
     const player = this.nextPlayerInHandIndex();
     const betAsInteger = parseInt(bet, 10) || 0
 
+    isBettingRoundOver();
+
     this.setState({
       pot: pot + betAsInteger,
       bet: "",
@@ -88,7 +90,6 @@ class BettingContainer extends Component {
       hand: player.hand
     });
 
-    isBettingRoundOver();
     return true;
   }
 
