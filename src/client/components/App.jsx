@@ -20,23 +20,23 @@ class App extends React.Component {
     this.playersInHand = this.playersInHand.bind(this);
     this.nextRound = this.nextRound.bind(this);
     this.isHandOver = this.isHandOver.bind(this);
-    this.betsMatch = this.betsMatch.bind(this);
     this.evaluateHands = this.evaluateHands.bind(this);
     this.clearPlayerBets = this.clearPlayerBets.bind(this);
 
     this.state = {
-      round: 'preFlop',
+      round: App.preFlop,
       highestBet: 0,
       evaluatedHands: []
     }
   }
 
-  betsMatch() {
-    const highestBet = this.betting.highestBet(this.players)
-    this.setState({highestBet})
-    return _.all(this.playersInHand(), (player) =>
-      (player.bet && player.bet === highestBet))
-  }
+  static get preFlop() { return 'preFlop'; }
+
+  static get flop() { return 'flop'; }
+
+  static get turn() { return 'turn'; }
+
+  static get river() { return 'river'; }
 
   evaluateHands() {
     const players = this.playersInHand()
@@ -48,69 +48,68 @@ class App extends React.Component {
     })
   }
 
+  newHand() {
+    this.dealer.nextHand(this.players);
+    // need to reset pot.
+    this.dealer.deal(this.players);
+  }
+
   isHandOver(bettingRoundComplete) {
     const { round } = this.state;
 
-    if (this.playersInHand().length === 1) {
-      this.dealer.nextHand(this.players)
-      return true;
-    }
-
-    if (round === 'river' && bettingRoundComplete) {
-      this.setState({
-        evaluatedHands: this.evaluateHands()
-      })
-      // this.dealer.nextHand(this.players)
-      return true
-    }
-
-    return false;
+    return (
+      this.playersInHand().length === 1 ||
+        (round === App.river && bettingRoundComplete)
+    );
   }
 
   clearPlayerBets() {
-    this.playersInHand().forEach(pokerPlayer => {
-      const player = pokerPlayer;
-      player.bet = 0;
-      return player;
-    })
+    this.betting.clearPlayerBets(this.playersInHand());
   }
 
   isBettingRoundOver() {
-    const bettingRoundComplete = this.betsMatch();
-    this.isHandOver(bettingRoundComplete);
+    const bettingRoundComplete = this.betting.betsMatch(this.playersInHand());
+    const handIsOver = this.isHandOver(bettingRoundComplete);
 
-    if(bettingRoundComplete) {
+    if (bettingRoundComplete) {
       this.clearPlayerBets();
       this.setState({
-        round: this.nextRound(),
-        highestBet: 0
+        highestBet: 0,
+        round: this.nextRound()
       })
     } else {
       this.setState({
         highestBet: this.betting.highestBet(this.players)
       })
     }
+
+    if (handIsOver) {
+      this.setState({
+        evaluatedHands: this.evaluateHands(),
+        round: App.preFlop
+      })
+    }
   }
 
   playersInHand() {
-    return this.players.filter(player => (player.hand.length === 2))
+    return this.betting.playersInHand(this.players);
   }
 
   nextRound() {
     const { round } = this.state;
 
     switch(round) {
-      case "preFlop":
+      case App.preFlop:
         this.dealer.dealFlop();
-        return "flop";
-      case "flop":
+        return App.flop;
+      case App.flop:
         this.dealer.dealNext();
-        return "turn";
-      case "turn":
+        return App.turn;
+      case App.turn:
         this.dealer.dealNext();
-        return "river";
+        return App.river;
       default:
-        return "preFlop";
+        return App.preFlop;
     }
   }
 

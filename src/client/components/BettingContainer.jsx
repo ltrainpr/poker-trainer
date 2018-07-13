@@ -111,35 +111,19 @@ class BettingContainer extends Component {
           <BetAmount updateFilter={this.bettingAmount} bet={betAsInteger} />
         </div>
         <div>
-          <ActionButton
-            value="Call"
-            player={player}
-            bet={betAsInteger}
-            nextPlayerHand={this.nextPlayerHand}
-            players={players}
-            highestBet={highestBet}
-          />
-          <ActionButton
-            value="Bet"
-            player={player}
-            bet={betAsInteger}
-            nextPlayerHand={this.nextPlayerHand}
-            players={players}
-          />
-          <ActionButton
-            value="Raise"
-            player={player}
-            bet={betAsInteger}
-            nextPlayerHand={this.nextPlayerHand}
-            players={players}
-          />
-          <ActionButton
-            value="Fold"
-            player={player}
-            bet={betAsInteger}
-            nextPlayerHand={this.nextPlayerHand}
-            players={players}
-          />
+          {
+            ["Check", "Call", "Bet", "Raise", "Fold"].map(action =>
+              <ActionButton
+                key={action}
+                value={action}
+                player={player}
+                bet={betAsInteger}
+                nextPlayerHand={this.nextPlayerHand}
+                players={players}
+                highestBet={highestBet}
+              />
+            )
+          }
         </div>
         <div>
           <Pot pot={pot} />
