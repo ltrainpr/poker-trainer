@@ -1,6 +1,6 @@
-- Flop, Turn, River rounds should start with player closest to under the gun player after bets are square/in.
 - Pot needs to reset when hand is over.
 - Check button/action moves to next player without betting, assuming no other player has bet.
+- Betting less than currrent highValue should not be allowed
 - Add a deal next hand button:
   - Deals next hand.
 - Display players remaining money amount.
@@ -15,7 +15,6 @@ TODO:
 
 REFACTOR (Make as many dumb components as you can):
   - Move state to App.jsx level.
-    - Pot
     - Player
     - Highest Bet
   - Which functions can be extracted into js pure functional file.

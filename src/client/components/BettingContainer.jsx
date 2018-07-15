@@ -33,7 +33,6 @@ class BettingContainer extends Component {
       bet: "",
       player,
       hand: player.hand,
-      pot: 0
     };
   }
 
@@ -72,19 +71,24 @@ class BettingContainer extends Component {
 
   playersInHand() {
     const { players } = this.props;
-    return players.filter(player => (player.hand.length === 2))
+    return this.betting.playersInHand(players);
+  }
+
+  playerUnderTheGun() {
+    const { players } = this.props;
+    const playersInHand = this.betting.playersInHand(players);
+    return _.min(playersInHand, (player) => player.seatIndex);
   }
 
   nextPlayerHand() {
-    const { bet, pot } = this.state;
-    const { isBettingRoundOver } = this.props;
-    const player = this.nextPlayerInHandIndex();
-    const betAsInteger = parseInt(bet, 10) || 0
+    const { bet } = this.state;
+    const { isBettingRoundOver, updatePot } = this.props;
+    const bettingRoundComplete = isBettingRoundOver();
+    const player = bettingRoundComplete ? this.playerUnderTheGun() : this.nextPlayerInHandIndex();
 
-    isBettingRoundOver();
+    updatePot(bet, bettingRoundComplete);
 
     this.setState({
-      pot: pot + betAsInteger,
       bet: "",
       player,
       hand: player.hand
@@ -98,8 +102,8 @@ class BettingContainer extends Component {
   }
 
   render() {
-    const { hand, player, bet, pot } = this.state;
-    const { players, highestBet } = this.props;
+    const { hand, player, bet } = this.state;
+    const { players, highestBet, pot } = this.props;
     const betAsInteger = parseInt(bet, 10) || 0;
 
     return (

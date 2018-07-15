@@ -22,21 +22,23 @@ class App extends React.Component {
     this.isHandOver = this.isHandOver.bind(this);
     this.evaluateHands = this.evaluateHands.bind(this);
     this.clearPlayerBets = this.clearPlayerBets.bind(this);
+    this.updatePot = this.updatePot.bind(this);
 
     this.state = {
-      round: App.preFlop,
+      round: App.PreFlop,
       highestBet: 0,
-      evaluatedHands: []
+      evaluatedHands: [],
+      pot: 0
     }
   }
 
-  static get preFlop() { return 'preFlop'; }
+  static get PreFlop() { return 'preFlop'; }
 
-  static get flop() { return 'flop'; }
+  static get Flop() { return 'flop'; }
 
-  static get turn() { return 'turn'; }
+  static get Turn() { return 'turn'; }
 
-  static get river() { return 'river'; }
+  static get River() { return 'river'; }
 
   evaluateHands() {
     const players = this.playersInHand()
@@ -59,7 +61,7 @@ class App extends React.Component {
 
     return (
       this.playersInHand().length === 1 ||
-        (round === App.river && bettingRoundComplete)
+        (round === App.River && bettingRoundComplete)
     );
   }
 
@@ -86,9 +88,11 @@ class App extends React.Component {
     if (handIsOver) {
       this.setState({
         evaluatedHands: this.evaluateHands(),
-        round: App.preFlop
+        round: App.PreFlop
       })
     }
+
+    return bettingRoundComplete;
   }
 
   playersInHand() {
@@ -99,22 +103,32 @@ class App extends React.Component {
     const { round } = this.state;
 
     switch(round) {
-      case App.preFlop:
+      case App.PreFlop:
         this.dealer.dealFlop();
-        return App.flop;
-      case App.flop:
+        return App.Flop;
+      case App.Flop:
         this.dealer.dealNext();
-        return App.turn;
-      case App.turn:
+        return App.Turn;
+      case App.Turn:
         this.dealer.dealNext();
-        return App.river;
+        return App.River;
       default:
-        return App.preFlop;
+        return App.PreFlop;
+    }
+  }
+
+  updatePot(bet, bettingRoundComplete) {
+    if (bettingRoundComplete) {
+      this.setState({ pot: 0 });
+    } else {
+      const { pot } = this.state;
+      const betAsInteger = parseInt(bet, 10) || 0;
+      this.setState({ pot: pot + betAsInteger });
     }
   }
 
   render() {
-    const { highestBet, evaluatedHands } = this.state;
+    const { highestBet, evaluatedHands, pot } = this.state;
 
     return (
       <div>
@@ -123,7 +137,9 @@ class App extends React.Component {
             players={this.game.players}
             button={this.game.button}
             isBettingRoundOver={this.isBettingRoundOver}
-            highestBet={highestBet} />
+            highestBet={highestBet}
+            pot={pot}
+            updatePot={this.updatePot} />
         </div>
         <div>
           {
