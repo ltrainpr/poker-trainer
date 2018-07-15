@@ -40,6 +40,7 @@ function Betting() {
   function playerFolds(player) {
     const currentPlayer = player;
     currentPlayer.hand.length = 0;
+    currentPlayer.bet = 0;
   }
 
   function highestBet(players) {
@@ -47,7 +48,25 @@ function Betting() {
     return _.isEmpty(maxBet) ? 0 : maxBet.bet;
   }
 
-  return { blinds, playerBets, playerFolds, highestBet };
+  function betsMatch(players) {
+    const maxBet = this.highestBet(players);
+    return _.all(players, (player) =>
+      (player.bet && player.bet === maxBet))
+  }
+
+  function playersInHand(players) {
+    return players.filter(player => (player.hand.length === 2));
+  }
+
+  function clearPlayerBets(players) {
+    players.forEach(pokerPlayer => {
+      const player = pokerPlayer;
+      player.bet = null;
+      return player;
+    })
+  }
+
+  return { blinds, playerBets, playerFolds, highestBet, betsMatch, playersInHand, clearPlayerBets };
 };
 
 module.exports = Betting;

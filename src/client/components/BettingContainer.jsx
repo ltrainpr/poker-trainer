@@ -33,7 +33,6 @@ class BettingContainer extends Component {
       bet: "",
       player,
       hand: player.hand,
-      pot: 0
     };
   }
 
@@ -72,26 +71,29 @@ class BettingContainer extends Component {
 
   playersInHand() {
     const { players } = this.props;
-    return players.filter(player => (player.hand.length === 2))
+    return this.betting.playersInHand(players);
+  }
+
+  playerUnderTheGun() {
+    const { players } = this.props;
+    const playersInHand = this.betting.playersInHand(players);
+    return _.min(playersInHand, (player) => player.seatIndex);
   }
 
   nextPlayerHand() {
-    const { bet, pot } = this.state;
-    const { isBettingRoundOver, isHandOver } = this.props;
+    const { bet } = this.state;
+    const { isBettingRoundOver, updatePot } = this.props;
+    const bettingRoundComplete = isBettingRoundOver();
+    const player = bettingRoundComplete ? this.playerUnderTheGun() : this.nextPlayerInHandIndex();
 
-    if (isHandOver()) { return false }
-
-    const player = this.nextPlayerInHandIndex();
-    const betAsInteger = parseInt(bet, 10) || 0
+    updatePot(bet, bettingRoundComplete);
 
     this.setState({
-      pot: pot + betAsInteger,
       bet: "",
       player,
       hand: player.hand
     });
 
-    isBettingRoundOver();
     return true;
   }
 
@@ -100,8 +102,8 @@ class BettingContainer extends Component {
   }
 
   render() {
-    const { hand, player, bet, pot } = this.state;
-    const { players, highestBet } = this.props;
+    const { hand, player, bet } = this.state;
+    const { players, highestBet, pot } = this.props;
     const betAsInteger = parseInt(bet, 10) || 0;
 
     return (
@@ -114,35 +116,19 @@ class BettingContainer extends Component {
           <BetAmount updateFilter={this.bettingAmount} bet={betAsInteger} />
         </div>
         <div>
-          <ActionButton
-            value="Call"
-            player={player}
-            bet={betAsInteger}
-            nextPlayerHand={this.nextPlayerHand}
-            players={players}
-            highestBet={highestBet}
-          />
-          <ActionButton
-            value="Bet"
-            player={player}
-            bet={betAsInteger}
-            nextPlayerHand={this.nextPlayerHand}
-            players={players}
-          />
-          <ActionButton
-            value="Raise"
-            player={player}
-            bet={betAsInteger}
-            nextPlayerHand={this.nextPlayerHand}
-            players={players}
-          />
-          <ActionButton
-            value="Fold"
-            player={player}
-            bet={betAsInteger}
-            nextPlayerHand={this.nextPlayerHand}
-            players={players}
-          />
+          {
+            ["Check", "Call", "Bet", "Raise", "Fold"].map(action =>
+              <ActionButton
+                key={action}
+                value={action}
+                player={player}
+                bet={betAsInteger}
+                nextPlayerHand={this.nextPlayerHand}
+                players={players}
+                highestBet={highestBet}
+              />
+            )
+          }
         </div>
         <div>
           <Pot pot={pot} />

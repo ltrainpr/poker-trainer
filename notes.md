@@ -1,8 +1,24 @@
-- Analyze/Evaluate hands in each round for each player.
-- Display winning hand.
-
+- Pot needs to reset when hand is over.
+- Check button/action moves to next player without betting, assuming no other player has bet.
+- Betting less than currrent highValue should not be allowed
 - Add a deal next hand button:
   - Deals next hand.
+- Display players remaining money amount.
+
+TODO:
+- If all players fold it should give ante money to big blind.
+- Analyze/Evaluate hands in each round for each player.
+  - Hand odds of winning.
+  - How many outs?
+  -
+- All in split pots.
+
+REFACTOR (Make as many dumb components as you can):
+  - Move state to App.jsx level.
+    - Player
+    - Highest Bet
+  - Which functions can be extracted into js pure functional file.
+
 
 Data: Players
 

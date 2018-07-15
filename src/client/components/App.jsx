@@ -1,11 +1,13 @@
 import React from "react";
 import BettingContainer from "./BettingContainer";
 import CommunityCards from "./CommunityCards";
+import HighestHand from "./HighestHand"
 
 const _ = require('underscore');
 const Game = require("../game/game");
+const HighHand = require("../high_hand/high_hand")
 
-class PokerGame extends React.Component {
+class App extends React.Component {
   constructor() {
     super();
     this.game = this.game || Game();
@@ -18,73 +20,115 @@ class PokerGame extends React.Component {
     this.playersInHand = this.playersInHand.bind(this);
     this.nextRound = this.nextRound.bind(this);
     this.isHandOver = this.isHandOver.bind(this);
-    this.betsMatch = this.betsMatch.bind(this);
+    this.evaluateHands = this.evaluateHands.bind(this);
+    this.clearPlayerBets = this.clearPlayerBets.bind(this);
+    this.updatePot = this.updatePot.bind(this);
 
     this.state = {
-      round: 'preFlop',
-      highestBet: this.betting.highestBet(this.players)
+      round: App.PreFlop,
+      highestBet: 0,
+      evaluatedHands: [],
+      pot: 0
     }
   }
 
-  betsMatch() {
-    const highestBet = this.betting.highestBet(this.players)
-    this.setState({highestBet})
-    return _.all(this.playersInHand(), (player) =>
-      (player.bet && player.bet === highestBet))
+  static get PreFlop() { return 'preFlop'; }
+
+  static get Flop() { return 'flop'; }
+
+  static get Turn() { return 'turn'; }
+
+  static get River() { return 'river'; }
+
+  evaluateHands() {
+    const players = this.playersInHand()
+    const communityCards = this.dealer.communityCards()
+
+     return players.map(player => {
+      const cards = player.hand.concat(communityCards);
+      return {highHand: HighHand(cards), cards: player.hand};
+    })
+  }
+
+  newHand() {
+    this.dealer.nextHand(this.players);
+    // need to reset pot.
+    this.dealer.deal(this.players);
   }
 
   isHandOver(bettingRoundComplete) {
     const { round } = this.state;
 
-    if (this.playersInHand().length === 1) {
-      this.dealer.nextHand(this.players)
-      return true;
-    }
+    return (
+      this.playersInHand().length === 1 ||
+        (round === App.River && bettingRoundComplete)
+    );
+  }
 
-    if (round === 'river' && bettingRoundComplete) {
-      this.dealer.nextHand(this.players)
-      return true
-    }
-
-    return false;
+  clearPlayerBets() {
+    this.betting.clearPlayerBets(this.playersInHand());
   }
 
   isBettingRoundOver() {
-    const bettingRoundComplete = this.betsMatch();
-    this.isHandOver(bettingRoundComplete);
+    const bettingRoundComplete = this.betting.betsMatch(this.playersInHand());
+    const handIsOver = this.isHandOver(bettingRoundComplete);
 
-    if(bettingRoundComplete) {
+    if (bettingRoundComplete) {
+      this.clearPlayerBets();
       this.setState({
+        highestBet: 0,
         round: this.nextRound()
       })
+    } else {
+      this.setState({
+        highestBet: this.betting.highestBet(this.players)
+      })
     }
+
+    if (handIsOver) {
+      this.setState({
+        evaluatedHands: this.evaluateHands(),
+        round: App.PreFlop
+      })
+    }
+
+    return bettingRoundComplete;
   }
 
   playersInHand() {
-    return this.players.filter(player => (player.hand.length === 2))
+    return this.betting.playersInHand(this.players);
   }
 
   nextRound() {
-    const { round } = this.state
+    const { round } = this.state;
 
     switch(round) {
-      case "preFlop":
+      case App.PreFlop:
         this.dealer.dealFlop();
-        return "flop";
-      case "flop":
+        return App.Flop;
+      case App.Flop:
         this.dealer.dealNext();
-        return "turn";
-      case "turn":
+        return App.Turn;
+      case App.Turn:
         this.dealer.dealNext();
-        return "river";
+        return App.River;
       default:
-        this.dealer.nextHand(this.players);
-        return "preFlop";
+        return App.PreFlop;
+    }
+  }
+
+  updatePot(bet, bettingRoundComplete) {
+    if (bettingRoundComplete) {
+      this.setState({ pot: 0 });
+    } else {
+      const { pot } = this.state;
+      const betAsInteger = parseInt(bet, 10) || 0;
+      this.setState({ pot: pot + betAsInteger });
     }
   }
 
   render() {
-    const { highestBet } = this.state;
+    const { highestBet, evaluatedHands, pot } = this.state;
 
     return (
       <div>
@@ -94,7 +138,8 @@ class PokerGame extends React.Component {
             button={this.game.button}
             isBettingRoundOver={this.isBettingRoundOver}
             highestBet={highestBet}
-            isHandOver={this.isHandOver} />
+            pot={pot}
+            updatePot={this.updatePot} />
         </div>
         <div>
           {
@@ -104,9 +149,16 @@ class PokerGame extends React.Component {
             })
           }
         </div>
+        <div>
+          {
+            evaluatedHands.map((obj, idx) =>
+              <HighestHand key={idx} result={obj.highHand} cards={obj.cards} />
+            )
+          }
+        </div>
       </div>
     );
   }
 }
 
-export default PokerGame;
+export default App;

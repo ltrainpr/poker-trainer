@@ -1,21 +1,24 @@
 import React, { Component } from 'react';
 
 class PlayerCards extends Component {
-  imagePath(card) {
+  static imagePath(card) {
     return (
-      "deck_of_cards/" + card.value.toString() + card.suit.charAt(0).toUpperCase() + ".png"
+      `deck_of_cards/${card.value.toString()}${card.suit.charAt(0).toUpperCase()}.png`
     )
   }
 
   render() {
-    var firstCard = this.props.hand[0];
-    var secondCard = this.props.hand[1];
+    const {hand} = this.props;
+    // if (hand.length === 0) { return null; }
+
+    const firstCard = hand[0];
+    const secondCard = hand[1];
 
     return (
       <div>
-        <img id={firstCard.value + "_" + firstCard.suit} src={this.imagePath(firstCard)} className="card" value={firstCard.value} />
+        <img id={`${firstCard.value}_${firstCard.suit}`} src={PlayerCards.imagePath(firstCard)} className="card" value={firstCard.value} alt="player first card"/>
 
-        <img id={secondCard.value +  "_" + secondCard.suit} src={this.imagePath(secondCard)} className="card" value={secondCard.value} />
+        <img id={ `${secondCard.value}_${secondCard.suit}` } src={PlayerCards.imagePath(secondCard)} className="card" value={secondCard.value} alt="player second card"/>
       </div>
     )
   }
