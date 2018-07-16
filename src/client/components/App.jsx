@@ -2,6 +2,8 @@ import React from "react";
 import BettingContainer from "./BettingContainer";
 import CommunityCards from "./CommunityCards";
 import HighestHand from "./HighestHand"
+import Button from "../game/button";
+import HandIsOverButton from "./HandIsOverButton"
 
 const _ = require('underscore');
 const Game = require("../game/game");
@@ -10,11 +12,17 @@ const HighHand = require("../high_hand/high_hand")
 class App extends React.Component {
   constructor() {
     super();
+    this.button = Button();
+    const startingButton = this.button.generateButtonIndex();
+    const underTheGunIndex = this.button.underTheGunIndex(startingButton)
+
     this.game = this.game || Game();
     this.players = this.game.players
     this.dealer = this.game.dealer
     this.betting = this.game.betting
     this.dealer.deal(this.players);
+
+    this.betting.blinds(this.players, startingButton);
 
     this.isBettingRoundOver = this.isBettingRoundOver.bind(this);
     this.playersInHand = this.playersInHand.bind(this);
@@ -23,12 +31,14 @@ class App extends React.Component {
     this.evaluateHands = this.evaluateHands.bind(this);
     this.clearPlayerBets = this.clearPlayerBets.bind(this);
     this.updatePot = this.updatePot.bind(this);
+    this.newHand = this.newHand.bind(this);
 
     this.state = {
       round: App.PreFlop,
       highestBet: 0,
       evaluatedHands: [],
-      pot: 0
+      pot: 0,
+      underTheGunIndex
     }
   }
 
@@ -52,8 +62,8 @@ class App extends React.Component {
 
   newHand() {
     this.dealer.nextHand(this.players);
-    // need to reset pot.
     this.dealer.deal(this.players);
+    this.setState({ pot: 0 })
   }
 
   isHandOver(bettingRoundComplete) {
@@ -117,25 +127,26 @@ class App extends React.Component {
     }
   }
 
-  updatePot(bet, bettingRoundComplete) {
-    if (bettingRoundComplete) {
-      this.setState({ pot: 0 });
-    } else {
+  updatePot(bet) {
+    const { evaluatedHands } = this.state;
+    if (_.isEmpty(evaluatedHands)) {
       const { pot } = this.state;
       const betAsInteger = parseInt(bet, 10) || 0;
       this.setState({ pot: pot + betAsInteger });
+    } else {
+      this.setState({ pot: 0 });
     }
   }
 
   render() {
-    const { highestBet, evaluatedHands, pot } = this.state;
+    const { underTheGunIndex, highestBet, evaluatedHands, pot } = this.state;
 
     return (
       <div>
         <div>
           <BettingContainer
             players={this.game.players}
-            button={this.game.button}
+            underTheGunIndex={underTheGunIndex}
             isBettingRoundOver={this.isBettingRoundOver}
             highestBet={highestBet}
             pot={pot}
@@ -149,6 +160,9 @@ class App extends React.Component {
             })
           }
         </div>
+        <HandIsOverButton
+          evaluatedHands={evaluatedHands}
+          newHand={this.newHand} />
         <div>
           {
             evaluatedHands.map((obj, idx) =>

@@ -15,9 +15,9 @@ function Dealer() {
   function resetDeck() { deck = Shuffler(); }
 
   function handIsOver(players) {
+    resetDeck();
     resetPlayerHands(players);
     resetCommunityCards();
-    resetDeck();
   }
 
   function currentDeck() { return deck; }

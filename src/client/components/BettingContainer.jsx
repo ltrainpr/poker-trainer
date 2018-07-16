@@ -3,7 +3,6 @@ import ShowHand from "./ShowHand";
 import BetAmount from "./BetAmount";
 import ActionButton from "./ActionButton";
 import Betting from "../game/betting";
-import Button from "../game/button";
 import Pot from "./Pot";
 import HighestBet from "./HighestBet"
 
@@ -13,15 +12,10 @@ const _ = require('underscore');
 class BettingContainer extends Component {
   constructor(props) {
     super(props);
-    const { players } = this.props;
-
-    this.button = Button();
-    const startingButton = this.button.generateButtonIndex();
-    const underTheGunIndex = this.button.underTheGunIndex(startingButton)
+    const { players, underTheGunIndex } = this.props;
     const player = players[BettingContainer.getPlayerToActIndex(underTheGunIndex)];
 
     this.betting = Betting();
-    this.betting.blinds(players, startingButton);
 
     this.bettingAmount = this.bettingAmount.bind(this);
     this.nextPlayerHand = this.nextPlayerHand.bind(this);
@@ -86,7 +80,7 @@ class BettingContainer extends Component {
     const bettingRoundComplete = isBettingRoundOver();
     const player = bettingRoundComplete ? this.playerUnderTheGun() : this.nextPlayerInHandIndex();
 
-    updatePot(bet, bettingRoundComplete);
+    updatePot(bet);
 
     this.setState({
       bet: "",
