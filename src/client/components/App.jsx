@@ -38,6 +38,13 @@ class App extends React.Component {
     this.bettingAmount = this.bettingAmount.bind(this);
     this.setPlayer = this.setPlayer.bind(this);
 
+    this.nextPlayerInHandIndex = this.nextPlayerInHandIndex.bind(this);
+    this.nextPlayer = this.nextPlayer.bind(this);
+    this.playersInHand = this.playersInHand.bind(this);
+    this.playerUnderTheGun = this.playerUnderTheGun.bind(this);
+    this.nextPlayerHand = this.nextPlayerHand.bind(this);
+    this.playerAction = this.playerAction.bind(this);
+
     this.state = {
       round: App.PreFlop,
       bet: "",
@@ -172,24 +179,75 @@ class App extends React.Component {
     this.setState({bet: parseInt(bet, 10) });
   }
 
+  nextPlayerInHandIndex() {
+    const { player } = this.state;
+    let nextPlayerInHandIndex = App.getPlayerToActIndex(player.seatIndex + 1);
+    let nextPlayer = this.nextPlayer(nextPlayerInHandIndex);
+
+    for (let count = this.players.length - 1; count >= 0; count-= 1) {
+      if(nextPlayer.hand.length !== 0) { return nextPlayer; }
+      nextPlayerInHandIndex = App.getPlayerToActIndex(nextPlayer.seatIndex + 1);
+      nextPlayer = this.nextPlayer(nextPlayerInHandIndex);
+    };
+
+    return nextPlayer;
+  }
+
+  nextPlayer(idx) {
+    return _.find(this.players, (pokerPlayer) => pokerPlayer.seatIndex === idx )
+  }
+
+  playerUnderTheGun() {
+    const playersInHand = this.betting.playersInHand(this.players);
+    return _.min(playersInHand, (player) => player.seatIndex);
+  }
+
+  nextPlayerHand() {
+    const bettingRoundComplete = this.isBettingRoundOver();
+    const player = bettingRoundComplete ? this.playerUnderTheGun() : this.nextPlayerInHandIndex();
+
+    this.updatePot();
+    this.resetBet();
+    this.setPlayer(player);
+
+    return true;
+  }
+
+  playerAction(value) {
+    const { highestBet, bet, player } = this.state;
+
+    switch (value.toLowerCase()) {
+      case "fold":
+        this.betting.playerFolds(player);
+        break;
+      case "call":
+        this.betting.playerBets(player, highestBet);
+        break;
+      case "bet":
+        this.betting.playerBets(player, bet);
+        break;
+      case "raise":
+        this.betting.playerBets(player, bet);
+        break;
+      default:
+        console.log(`ActionButton#handleClick value: ${value}`);
+    }
+    this.nextPlayerHand();
+  }
+
   render() {
-    const { underTheGunIndex, highestBet, evaluatedHands, pot, bet, player } = this.state;
+    const { highestBet, evaluatedHands, pot, bet, player } = this.state;
 
     return (
       <div>
         <div>
           <BettingContainer
-            players={this.game.players}
-            player={player}
-            underTheGunIndex={underTheGunIndex}
-            isBettingRoundOver={this.isBettingRoundOver}
             highestBet={highestBet}
             pot={pot}
-            updatePot={this.updatePot}
-            resetBet={this.resetBet}
             bettingAmount={this.bettingAmount}
             bet={bet}
-            setPlayer={this.setPlayer} />
+            player={player}
+            playerAction={this.playerAction} />
         </div>
         <div>
           {
