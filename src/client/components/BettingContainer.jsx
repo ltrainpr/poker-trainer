@@ -22,6 +22,7 @@ class BettingContainer extends Component {
     this.nextPlayerInHandIndex = this.nextPlayerInHandIndex.bind(this);
     this.nextPlayer = this.nextPlayer.bind(this);
     this.playersInHand = this.playersInHand.bind(this);
+    this.playerAction = this.playerAction.bind(this);
 
     this.state = {
       bet: "",
@@ -95,9 +96,32 @@ class BettingContainer extends Component {
     this.setState({bet: parseInt(bet, 10) });
   }
 
+  playerAction(value) {
+    const { player, bet } = this.state;
+    const { highestBet } = this.props;
+
+    switch (value.toLowerCase()) {
+      case "fold":
+        this.betting.playerFolds(player);
+        break;
+      case "call":
+        this.betting.playerBets(player, highestBet);
+        break;
+      case "bet":
+        this.betting.playerBets(player, bet);
+        break;
+      case "raise":
+        this.betting.playerBets(player, bet);
+        break;
+      default:
+        console.log(`ActionButton#handleClick value: ${value}`);
+    }
+    this.nextPlayerHand();
+  }
+
   render() {
     const { hand, player, bet } = this.state;
-    const { players, highestBet, pot } = this.props;
+    const { highestBet, pot } = this.props;
     const betAsInteger = parseInt(bet, 10) || 0;
 
     return (
@@ -115,11 +139,7 @@ class BettingContainer extends Component {
               <ActionButton
                 key={action}
                 value={action}
-                player={player}
-                bet={betAsInteger}
-                nextPlayerHand={this.nextPlayerHand}
-                players={players}
-                highestBet={highestBet}
+                playerAction={this.playerAction}
               />
             )
           }
