@@ -8,12 +8,9 @@ import HighestBet from "./HighestBet"
 
 const _ = require('underscore');
 
-
 class BettingContainer extends Component {
   constructor(props) {
     super(props);
-    const { players, underTheGunIndex } = this.props;
-    const player = players[BettingContainer.getPlayerToActIndex(underTheGunIndex)];
 
     this.betting = Betting();
     this.nextPlayerHand = this.nextPlayerHand.bind(this);
@@ -21,11 +18,6 @@ class BettingContainer extends Component {
     this.nextPlayer = this.nextPlayer.bind(this);
     this.playersInHand = this.playersInHand.bind(this);
     this.playerAction = this.playerAction.bind(this);
-
-    this.state = {
-      player,
-      hand: player.hand,
-    };
   }
 
   static getPlayerToActIndex(indx) {
@@ -42,8 +34,7 @@ class BettingContainer extends Component {
   }
 
   nextPlayerInHandIndex() {
-    const { players } = this.props;
-    const { player } = this.state;
+    const { players, player } = this.props;
     let nextPlayerInHandIndex = BettingContainer.getPlayerToActIndex(player.seatIndex + 1);
     let nextPlayer = this.nextPlayer(nextPlayerInHandIndex);
 
@@ -73,24 +64,19 @@ class BettingContainer extends Component {
   }
 
   nextPlayerHand() {
-    const { isBettingRoundOver, updatePot, resetBet } = this.props;
+    const { isBettingRoundOver, updatePot, resetBet, setPlayer } = this.props;
     const bettingRoundComplete = isBettingRoundOver();
     const player = bettingRoundComplete ? this.playerUnderTheGun() : this.nextPlayerInHandIndex();
 
     updatePot();
     resetBet();
-
-    this.setState({
-      player,
-      hand: player.hand
-    });
+    setPlayer(player);
 
     return true;
   }
 
   playerAction(value) {
-    const { player } = this.state;
-    const { highestBet, bet } = this.props;
+    const { highestBet, bet, player } = this.props;
 
     switch (value.toLowerCase()) {
       case "fold":
@@ -112,14 +98,13 @@ class BettingContainer extends Component {
   }
 
   render() {
-    const { hand, player } = this.state;
-    const { highestBet, pot, bettingAmount, bet } = this.props;
+    const { highestBet, pot, bettingAmount, bet, player } = this.props;
     const betAsInteger = parseInt(bet, 10) || 0;
 
     return (
       <div>
         <div>
-          <ShowHand hand={hand} />
+          <ShowHand hand={player.hand} />
         </div>
         <div>{player.name}</div>
         <div>

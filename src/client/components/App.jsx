@@ -22,6 +22,8 @@ class App extends React.Component {
     this.betting = this.game.betting
     this.dealer.deal(this.players);
 
+    const player = this.players[App.getPlayerToActIndex(underTheGunIndex)];
+
     this.betting.blinds(this.players, startingButton);
 
     this.isBettingRoundOver = this.isBettingRoundOver.bind(this);
@@ -34,6 +36,7 @@ class App extends React.Component {
     this.newHand = this.newHand.bind(this);
     this.resetBet = this.resetBet.bind(this);
     this.bettingAmount = this.bettingAmount.bind(this);
+    this.setPlayer = this.setPlayer.bind(this);
 
     this.state = {
       round: App.PreFlop,
@@ -41,7 +44,8 @@ class App extends React.Component {
       highestBet: 0,
       evaluatedHands: [],
       pot: 0,
-      underTheGunIndex
+      underTheGunIndex,
+      player
     }
   }
 
@@ -52,6 +56,25 @@ class App extends React.Component {
   static get Turn() { return 'turn'; }
 
   static get River() { return 'river'; }
+
+  static getPlayerToActIndex(indx) {
+    switch (indx) {
+      case 10:
+        return 0;
+      case 11:
+        return 1;
+      case 12:
+        return 2;
+      default:
+        return indx;
+    }
+  }
+
+  setPlayer(player) {
+    this.setState({
+      player
+    });
+  }
 
   evaluateHands() {
     const players = this.playersInHand()
@@ -150,13 +173,14 @@ class App extends React.Component {
   }
 
   render() {
-    const { underTheGunIndex, highestBet, evaluatedHands, pot, bet } = this.state;
+    const { underTheGunIndex, highestBet, evaluatedHands, pot, bet, player } = this.state;
 
     return (
       <div>
         <div>
           <BettingContainer
             players={this.game.players}
+            player={player}
             underTheGunIndex={underTheGunIndex}
             isBettingRoundOver={this.isBettingRoundOver}
             highestBet={highestBet}
@@ -164,7 +188,8 @@ class App extends React.Component {
             updatePot={this.updatePot}
             resetBet={this.resetBet}
             bettingAmount={this.bettingAmount}
-            bet={bet} />
+            bet={bet}
+            setPlayer={this.setPlayer} />
         </div>
         <div>
           {
