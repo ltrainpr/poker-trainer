@@ -32,9 +32,12 @@ class App extends React.Component {
     this.clearPlayerBets = this.clearPlayerBets.bind(this);
     this.updatePot = this.updatePot.bind(this);
     this.newHand = this.newHand.bind(this);
+    this.resetBet = this.resetBet.bind(this);
+    this.bettingAmount = this.bettingAmount.bind(this);
 
     this.state = {
       round: App.PreFlop,
+      bet: "",
       highestBet: 0,
       evaluatedHands: [],
       pot: 0,
@@ -127,8 +130,8 @@ class App extends React.Component {
     }
   }
 
-  updatePot(bet) {
-    const { evaluatedHands } = this.state;
+  updatePot() {
+    const { evaluatedHands, bet } = this.state;
     if (_.isEmpty(evaluatedHands)) {
       const { pot } = this.state;
       const betAsInteger = parseInt(bet, 10) || 0;
@@ -138,8 +141,16 @@ class App extends React.Component {
     }
   }
 
+  resetBet() {
+    this.setState({bet: ""});
+  }
+
+  bettingAmount(bet) {
+    this.setState({bet: parseInt(bet, 10) });
+  }
+
   render() {
-    const { underTheGunIndex, highestBet, evaluatedHands, pot } = this.state;
+    const { underTheGunIndex, highestBet, evaluatedHands, pot, bet } = this.state;
 
     return (
       <div>
@@ -150,7 +161,10 @@ class App extends React.Component {
             isBettingRoundOver={this.isBettingRoundOver}
             highestBet={highestBet}
             pot={pot}
-            updatePot={this.updatePot} />
+            updatePot={this.updatePot}
+            resetBet={this.resetBet}
+            bettingAmount={this.bettingAmount}
+            bet={bet} />
         </div>
         <div>
           {

@@ -16,8 +16,6 @@ class BettingContainer extends Component {
     const player = players[BettingContainer.getPlayerToActIndex(underTheGunIndex)];
 
     this.betting = Betting();
-
-    this.bettingAmount = this.bettingAmount.bind(this);
     this.nextPlayerHand = this.nextPlayerHand.bind(this);
     this.nextPlayerInHandIndex = this.nextPlayerInHandIndex.bind(this);
     this.nextPlayer = this.nextPlayer.bind(this);
@@ -25,7 +23,6 @@ class BettingContainer extends Component {
     this.playerAction = this.playerAction.bind(this);
 
     this.state = {
-      bet: "",
       player,
       hand: player.hand,
     };
@@ -76,15 +73,14 @@ class BettingContainer extends Component {
   }
 
   nextPlayerHand() {
-    const { bet } = this.state;
-    const { isBettingRoundOver, updatePot } = this.props;
+    const { isBettingRoundOver, updatePot, resetBet } = this.props;
     const bettingRoundComplete = isBettingRoundOver();
     const player = bettingRoundComplete ? this.playerUnderTheGun() : this.nextPlayerInHandIndex();
 
-    updatePot(bet);
+    updatePot();
+    resetBet();
 
     this.setState({
-      bet: "",
       player,
       hand: player.hand
     });
@@ -92,13 +88,9 @@ class BettingContainer extends Component {
     return true;
   }
 
-  bettingAmount(bet) {
-    this.setState({bet: parseInt(bet, 10) });
-  }
-
   playerAction(value) {
-    const { player, bet } = this.state;
-    const { highestBet } = this.props;
+    const { player } = this.state;
+    const { highestBet, bet } = this.props;
 
     switch (value.toLowerCase()) {
       case "fold":
@@ -120,8 +112,8 @@ class BettingContainer extends Component {
   }
 
   render() {
-    const { hand, player, bet } = this.state;
-    const { highestBet, pot } = this.props;
+    const { hand, player } = this.state;
+    const { highestBet, pot, bettingAmount, bet } = this.props;
     const betAsInteger = parseInt(bet, 10) || 0;
 
     return (
@@ -131,7 +123,7 @@ class BettingContainer extends Component {
         </div>
         <div>{player.name}</div>
         <div>
-          <BetAmount updateFilter={this.bettingAmount} bet={betAsInteger} />
+          <BetAmount updateFilter={bettingAmount} bet={betAsInteger} />
         </div>
         <div>
           {
