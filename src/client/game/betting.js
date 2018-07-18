@@ -66,7 +66,47 @@ function Betting() {
     })
   }
 
-  return { blinds, playerBets, playerFolds, highestBet, betsMatch, playersInHand, clearPlayerBets };
+  function playerAction(value, player, maxBet, bet) {
+    switch (value.toLowerCase()) {
+      case "fold":
+        this.playerFolds(player);
+        break;
+      case "call":
+        this.playerBets(player, maxBet);
+        break;
+      case "bet":
+        this.playerBets(player, bet);
+        break;
+      case "raise":
+        this.playerBets(player, bet);
+        break;
+      default:
+        console.log(`ActionButton#handleClick value: ${value}`);
+    }
+  }
+
+  function playerClosestToButton(players) {
+    return _.min(players, (player) => player.seatIndex);
+  }
+
+  function playerToActIndex(indx) {
+    switch (indx) {
+      case 10:
+        return 0;
+      case 11:
+        return 1;
+      case 12:
+        return 2;
+      default:
+        return indx;
+    }
+  }
+
+  function findNextPlayer(players, idx) {
+    return _.find(players, (player) => player.seatIndex > idx );
+  }
+
+  return { blinds, playerBets, playerFolds, highestBet, betsMatch, playersInHand, clearPlayerBets, playerAction, playerClosestToButton, playerToActIndex, findNextPlayer };
 };
 
 module.exports = Betting;

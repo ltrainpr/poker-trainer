@@ -15,10 +15,7 @@ TODO:
 - All in split pots.
 
 REFACTOR (Make as many dumb components as you can):
-  - Move state to App.jsx level.
-    - Player
-    - Highest Bet
-  - Which functions can be extracted into js pure functional file.
+- Which functions can be extracted into js pure functional file.
 
 
 Data: Players

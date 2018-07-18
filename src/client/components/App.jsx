@@ -7,7 +7,6 @@ import HandIsOverButton from "./HandIsOverButton"
 
 const _ = require('underscore');
 const Game = require("../game/game");
-const HighHand = require("../high_hand/high_hand")
 
 class App extends React.Component {
   constructor() {
@@ -22,7 +21,7 @@ class App extends React.Component {
     this.betting = this.game.betting
     this.dealer.deal(this.players);
 
-    const player = this.players[App.getPlayerToActIndex(underTheGunIndex)];
+    const player = this.players[this.getPlayerToActIndex(underTheGunIndex)];
 
     this.betting.blinds(this.players, startingButton);
 
@@ -38,12 +37,14 @@ class App extends React.Component {
     this.bettingAmount = this.bettingAmount.bind(this);
     this.setPlayer = this.setPlayer.bind(this);
 
-    this.nextPlayerInHandIndex = this.nextPlayerInHandIndex.bind(this);
-    this.nextPlayer = this.nextPlayer.bind(this);
+    this.nextPlayerInHand = this.nextPlayerInHand.bind(this);
     this.playersInHand = this.playersInHand.bind(this);
-    this.playerUnderTheGun = this.playerUnderTheGun.bind(this);
+    this.playerClosestToButton = this.playerClosestToButton.bind(this);
     this.nextPlayerHand = this.nextPlayerHand.bind(this);
     this.playerAction = this.playerAction.bind(this);
+    this.getNextPlayer = this.getNextPlayer.bind(this);
+    this.getPlayerToActIndex = this.getPlayerToActIndex.bind(this);
+    this.riverRound = this.riverRound.bind(this);
 
     this.state = {
       round: App.PreFlop,
@@ -51,61 +52,52 @@ class App extends React.Component {
       highestBet: 0,
       evaluatedHands: [],
       pot: 0,
-      underTheGunIndex,
       player
     }
   }
 
   static get PreFlop() { return 'preFlop'; }
 
-  static get Flop() { return 'flop'; }
-
-  static get Turn() { return 'turn'; }
-
   static get River() { return 'river'; }
 
-  static getPlayerToActIndex(indx) {
-    switch (indx) {
-      case 10:
-        return 0;
-      case 11:
-        return 1;
-      case 12:
-        return 2;
-      default:
-        return indx;
-    }
+  getPlayerToActIndex(indx) {
+    return this.betting.playerToActIndex(indx);
   }
 
-  setPlayer(player) {
-    this.setState({
-      player
-    });
+  setPlayer(player) { this.setState({ player }); }
+
+  getNextPlayer() {
+    return (this.isBettingRoundOver() ? this.playerClosestToButton() : this.nextPlayerInHand());
   }
 
   evaluateHands() {
-    const players = this.playersInHand()
-    const communityCards = this.dealer.communityCards()
-
-     return players.map(player => {
-      const cards = player.hand.concat(communityCards);
-      return {highHand: HighHand(cards), cards: player.hand};
-    })
+    const players = this.playersInHand();
+    return this.dealer.evaluateHands(players);
   }
 
   newHand() {
     this.dealer.nextHand(this.players);
-    this.dealer.deal(this.players);
-    this.setState({ pot: 0 })
+    // move button, recalculate player under the gun, set player in state
+    this.setState({
+      round: App.PreFlop,
+      bet: "",
+      highestBet: 0,
+      evaluatedHands: [],
+      pot: 0
+    })
   }
 
+// Possible extraction/refactor
   isHandOver(bettingRoundComplete) {
-    const { round } = this.state;
-
     return (
       this.playersInHand().length === 1 ||
-        (round === App.River && bettingRoundComplete)
+        (this.riverRound() && bettingRoundComplete)
     );
+  }
+
+  riverRound() {
+    const { round } = this.state;
+    return App.River === round;
   }
 
   clearPlayerBets() {
@@ -144,26 +136,12 @@ class App extends React.Component {
 
   nextRound() {
     const { round } = this.state;
-
-    switch(round) {
-      case App.PreFlop:
-        this.dealer.dealFlop();
-        return App.Flop;
-      case App.Flop:
-        this.dealer.dealNext();
-        return App.Turn;
-      case App.Turn:
-        this.dealer.dealNext();
-        return App.River;
-      default:
-        return App.PreFlop;
-    }
+    return this.dealer.nextRound(round);
   }
 
   updatePot() {
-    const { evaluatedHands, bet } = this.state;
+    const { evaluatedHands, bet, pot } = this.state;
     if (_.isEmpty(evaluatedHands)) {
-      const { pot } = this.state;
       const betAsInteger = parseInt(bet, 10) || 0;
       this.setState({ pot: pot + betAsInteger });
     } else {
@@ -171,67 +149,32 @@ class App extends React.Component {
     }
   }
 
-  resetBet() {
-    this.setState({bet: ""});
-  }
+  resetBet() { this.setState({bet: ""}); }
 
-  bettingAmount(bet) {
-    this.setState({bet: parseInt(bet, 10) });
-  }
+  bettingAmount(bet) { this.setState({bet: parseInt(bet, 10) }); }
 
-  nextPlayerInHandIndex() {
+  nextPlayerInHand() {
     const { player } = this.state;
-    let nextPlayerInHandIndex = App.getPlayerToActIndex(player.seatIndex + 1);
-    let nextPlayer = this.nextPlayer(nextPlayerInHandIndex);
-
-    for (let count = this.players.length - 1; count >= 0; count-= 1) {
-      if(nextPlayer.hand.length !== 0) { return nextPlayer; }
-      nextPlayerInHandIndex = App.getPlayerToActIndex(nextPlayer.seatIndex + 1);
-      nextPlayer = this.nextPlayer(nextPlayerInHandIndex);
-    };
-
-    return nextPlayer;
+    const players = this.playersInHand();
+    const playerFound = this.betting.findNextPlayer(players, player.seatIndex);
+    return playerFound || players[0];
   }
 
-  nextPlayer(idx) {
-    return _.find(this.players, (pokerPlayer) => pokerPlayer.seatIndex === idx )
-  }
-
-  playerUnderTheGun() {
-    const playersInHand = this.betting.playersInHand(this.players);
-    return _.min(playersInHand, (player) => player.seatIndex);
+  playerClosestToButton() {
+    return this.betting.playerClosestToButton(this.playersInHand())
   }
 
   nextPlayerHand() {
-    const bettingRoundComplete = this.isBettingRoundOver();
-    const player = bettingRoundComplete ? this.playerUnderTheGun() : this.nextPlayerInHandIndex();
-
     this.updatePot();
     this.resetBet();
-    this.setPlayer(player);
+    this.setPlayer(this.getNextPlayer());
 
     return true;
   }
 
   playerAction(value) {
     const { highestBet, bet, player } = this.state;
-
-    switch (value.toLowerCase()) {
-      case "fold":
-        this.betting.playerFolds(player);
-        break;
-      case "call":
-        this.betting.playerBets(player, highestBet);
-        break;
-      case "bet":
-        this.betting.playerBets(player, bet);
-        break;
-      case "raise":
-        this.betting.playerBets(player, bet);
-        break;
-      default:
-        console.log(`ActionButton#handleClick value: ${value}`);
-    }
+    this.betting.playerAction(value, player, highestBet, bet);
     this.nextPlayerHand();
   }
 
