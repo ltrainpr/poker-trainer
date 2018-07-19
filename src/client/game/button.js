@@ -1,6 +1,6 @@
-var _ = require('underscore');
+const _ = require('underscore');
 
-var Button = function() {
+function Button() {
   function generateButtonIndex() { return _.random(9); }
   function moveButton(button) { return button === 9 ? 0 : button + 1; }
   function underTheGunIndex(button) { return button + 3; }

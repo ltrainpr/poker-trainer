@@ -9,7 +9,7 @@ class PlayerCards extends Component {
 
   render() {
     const {hand} = this.props;
-    // if (hand.length === 0) { return null; }
+    if (hand.length === 0) { return null; }
 
     const firstCard = hand[0];
     const secondCard = hand[1];

@@ -1,8 +1,13 @@
 const Shuffler = require("./shuffler");
+const HighHand = require("../high_hand/high_hand")
 
 function Dealer() {
   let deck = Shuffler();
   const communityCards = [];
+  const PreFlop = 'preFlop';
+  const Flop    = 'flop';
+  const Turn    = 'turn';
+  const River   = 'river';
 
   function resetPlayerHands(players) {
     players.forEach((player) => {
@@ -13,20 +18,21 @@ function Dealer() {
 
   function resetCommunityCards() { communityCards.length = 0; }
   function resetDeck() { deck = Shuffler(); }
-
-  function handIsOver(players) {
-    resetPlayerHands(players);
-    resetCommunityCards();
-    resetDeck();
-  }
-
   function currentDeck() { return deck; }
   function getCommunityCards() { return communityCards; }
+
   function deal(players) {
     players.forEach((player) => {
       const pokerPlayer = player;
       pokerPlayer.hand = [deck.pop(), deck.pop()];
     });
+  }
+
+  function handIsOver(players) {
+    resetDeck();
+    resetPlayerHands(players);
+    resetCommunityCards();
+    deal(players);
   }
 
   function dealFlop() {
@@ -43,13 +49,39 @@ function Dealer() {
     }
   }
 
+  function evaluateHands(players) {
+    const commonCards = getCommunityCards();
+    return players.map(player => {
+      const cards = player.hand.concat(commonCards);
+      return {highHand: HighHand(cards), cards: player.hand};
+    })
+  }
+
+  function nextRound(round) {
+    switch(round) {
+      case PreFlop:
+        dealFlop();
+        return Flop;
+      case Flop:
+        dealNext();
+        return Turn;
+      case Turn:
+        dealNext();
+        return River;
+      default:
+        return PreFlop;
+    }
+  }
+
   return {
     deal,
     dealFlop,
     dealNext,
     currentDeck,
     communityCards: getCommunityCards,
-    nextHand:   handIsOver
+    nextHand:   handIsOver,
+    evaluateHands,
+    nextRound
   };
 };
 
